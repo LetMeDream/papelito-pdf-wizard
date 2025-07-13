@@ -21,6 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { PDFDocument, rgb } from "pdf-lib";
 
 interface ProductData {
   date: Date | null;
@@ -118,13 +119,126 @@ const BillingForm = () => {
 
   const generatePDF = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Obtener los datos del formulario
+      const formData = watch();
+      
+      // Cargar el PDF plantilla
+      const existingPdfBytes = await fetch('/COMPROB. RET. DAKA.pdf').then(res => res.arrayBuffer());
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      
+      // Obtener la primera página
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+      
+      // Obtener dimensiones de la página
+      const { height } = firstPage.getSize();
+      
+      // Añadir texto a la página (ajustar coordenadas según la plantilla)
+      let yPosition = height - 150; // Empezar desde arriba
+      
+      formData.products.forEach((product, index) => {
+        firstPage.drawText(`Producto ${index + 1}:`, {
+          x: 50,
+          y: yPosition,
+          size: 12,
+          color: rgb(0, 0, 0),
+        });
+        
+        yPosition -= 20;
+        
+        if (product.date) {
+          firstPage.drawText(`Fecha: ${format(product.date, "dd/MM/yyyy", { locale: es })}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        if (product.invoiceNumber) {
+          firstPage.drawText(`N° Factura: ${product.invoiceNumber}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        if (product.controlNumber) {
+          firstPage.drawText(`N° Control: ${product.controlNumber}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        if (product.transactionType) {
+          firstPage.drawText(`Tipo: ${product.transactionType}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        if (product.debitNoteNumber) {
+          firstPage.drawText(`N° Nota Débito: ${product.debitNoteNumber}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        if (product.creditNoteNumber) {
+          firstPage.drawText(`N° Nota Crédito: ${product.creditNoteNumber}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        if (product.affectedInvoiceNumber) {
+          firstPage.drawText(`N° Factura Afectada: ${product.affectedInvoiceNumber}`, {
+            x: 70,
+            y: yPosition,
+            size: 10,
+            color: rgb(0, 0, 0),
+          });
+          yPosition -= 15;
+        }
+        
+        yPosition -= 20; // Espacio entre productos
+      });
+      
+      // Serializar el PDF
+      const pdfBytes = await pdfDoc.save();
+      
+      // Crear un blob y descargarlo
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `comprobante_retencion_${format(new Date(), "yyyy-MM-dd_HH-mm")}.pdf`;
+      link.click();
+      
+      // Limpiar URL
+      URL.revokeObjectURL(url);
       
       toast({
         title: "PDF generado exitosamente",
-        description: "El documento ha sido creado y está listo para descargar.",
+        description: "El documento ha sido descargado automáticamente.",
       });
     } catch (error) {
+      console.error('Error generando PDF:', error);
       toast({
         variant: "destructive",
         title: "Error al generar PDF",
