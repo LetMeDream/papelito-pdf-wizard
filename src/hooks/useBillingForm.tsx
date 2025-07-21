@@ -22,14 +22,7 @@ export interface BillingFormData {
 export function useBillingForm() {
   const { toast } = useToast();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors, isSubmitting },
-    setValue,
-    watch,
-  } = useForm<BillingFormData>({
+  const methods = useForm<BillingFormData>({
     defaultValues: {
       products: [
         {
@@ -44,6 +37,15 @@ export function useBillingForm() {
       ]
     }
   });
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+  } = methods;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -216,5 +218,6 @@ export function useBillingForm() {
     removeProduct,
     onSubmit,
     generatePDF,
+    methods
   };
 }
