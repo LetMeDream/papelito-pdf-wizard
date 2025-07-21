@@ -1,4 +1,5 @@
 import React from "react";
+import PdfCanvas from "@/components/misc/PdfCanvas";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -264,7 +265,8 @@ const BillingForm = () => {
             {showCanvas && (
               <div className="flex justify-center mt-8">
                 <div style={{ maxWidth: 600, width: '100%' }}>
-                  <canvas id="pdf-canvas" width={600} height={800} style={{ border: '1px solid #ccc', background: '#fff', width: '100%', height: 'auto', display: 'block', margin: '0 auto' }} />
+                  {/* <canvas id="pdf-canvas" width={600} height={800} style={{ border: '1px solid #ccc', background: '#fff', width: '100%', height: 'auto', display: 'block', margin: '0 auto' }} /> */}
+                  <PdfCanvas url="/base.pdf" />
                 </div>
               </div>
             )}
