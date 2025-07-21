@@ -147,6 +147,7 @@ const BillingForm = () => {
                         <Label>Número de Factura *</Label>
                         <Input
                           {...register(`products.${index}.invoiceNumber`, { 
+                            onBlur: () => generatePDF(),
                             required: "Este campo es obligatorio" 
                           })}
                           placeholder="Ej: FAC-001"
@@ -163,6 +164,7 @@ const BillingForm = () => {
                         <Label>Número de Control de Factura *</Label>
                         <Input
                           {...register(`products.${index}.controlNumber`, { 
+                            onBlur: () => generatePDF(),
                             required: "Este campo es obligatorio" 
                           })}
                           placeholder="Ej: CTRL-001"
@@ -178,7 +180,9 @@ const BillingForm = () => {
                       <div className="space-y-2">
                         <Label>Número de Nota de Débito</Label>
                         <Input
-                          {...register(`products.${index}.debitNoteNumber`)}
+                          {...register(`products.${index}.debitNoteNumber`, {
+                            onBlur: () => generatePDF(),
+                          })}
                           placeholder="Ej: ND-001"
                         />
                       </div>
@@ -187,7 +191,9 @@ const BillingForm = () => {
                       <div className="space-y-2">
                         <Label>Número de Nota de Crédito</Label>
                         <Input
-                          {...register(`products.${index}.creditNoteNumber`)}
+                          {...register(`products.${index}.creditNoteNumber`, {
+                            onBlur: () => generatePDF(),
+                          })}
                           placeholder="Ej: NC-001"
                         />
                       </div>
@@ -197,7 +203,8 @@ const BillingForm = () => {
                         <Label>Tipo de Transacción *</Label>
                         <Input
                           {...register(`products.${index}.transactionType`, { 
-                            required: "Este campo es obligatorio" 
+                            required: "Este campo es obligatorio",
+                            onBlur: () => generatePDF()
                           })}
                           placeholder="Ej: Venta de productos"
                         />
@@ -212,7 +219,9 @@ const BillingForm = () => {
                       <div className="space-y-2">
                         <Label>Número de Factura Afectada</Label>
                         <Input
-                          {...register(`products.${index}.affectedInvoiceNumber`)}
+                          {...register(`products.${index}.affectedInvoiceNumber`, {
+                            onBlur: () => generatePDF(),
+                          })}
                           placeholder="Ej: FAC-000"
                         />
                       </div>

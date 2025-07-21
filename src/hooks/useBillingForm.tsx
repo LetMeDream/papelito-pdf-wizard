@@ -208,7 +208,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
 
   React.useEffect(() => {
     generatePDF();
-  }, [JSON.stringify(watch("products"))]);
+  }, [/* JSON.stringify(watch("products")) */]);
 
   return {
     register,
