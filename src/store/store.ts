@@ -8,7 +8,7 @@ interface BusinessInfo {
   fiscalPeriod: Date | null;           // Período fiscal
   fiscalAddress: string | null;        // Dirección fiscal del agente
   socialReasonSubjetc: string | null;  // Nombre o razón social del sujeto
-  subjectFif: string | null;                  // Registro de información fiscal del sujeto
+  subjectFif: string | null;           // Registro de información fiscal del sujeto
 }
 
 type Store = {

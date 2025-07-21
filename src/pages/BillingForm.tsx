@@ -22,6 +22,8 @@ import { Form, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useBillingForm } from "@/hooks/useBillingForm";
 
+import { useState } from "react";
+
 const BillingForm = () => {
   const {
     register,
@@ -42,6 +44,8 @@ const BillingForm = () => {
     generatePDF,
     methods
   } = useBillingForm();
+
+  const [showCanvas, setShowCanvas] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -241,12 +245,29 @@ const BillingForm = () => {
                 <FileDown className="h-4 w-4 mr-2" />
                 Generar PDF
               </Button>
+              <Button
+                type="button"
+                onClick={() => setShowCanvas((prev) => !prev)}
+                variant="outline"
+                className="flex-1"
+              >
+                {showCanvas ? 'Ocultar Canvas' : 'Mostrar Canvas'}
+              </Button>
               <Link to="/business-form" className="flex-1">
                 <Button type="button" variant="outline" className="w-full">
                   Volver a Formulario de Negocio
                 </Button>
               </Link>
             </div>
+
+            {/* Sección inferior con canvas, visible solo si showCanvas es true */}
+            {showCanvas && (
+              <div className="flex justify-center mt-8">
+                <div style={{ maxWidth: 600, width: '100%' }}>
+                  <canvas id="pdf-canvas" width={600} height={800} style={{ border: '1px solid #ccc', background: '#fff', width: '100%', height: 'auto', display: 'block', margin: '0 auto' }} />
+                </div>
+              </div>
+            )}
           </form>
         </FormProvider>
       </main>
