@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { format } from "date-fns";
@@ -19,7 +20,7 @@ export interface BillingFormData {
   products: ProductData[];
 }
 
-export function useBillingForm() {
+export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } = {}) {
   const { toast } = useToast();
 
   const methods = useForm<BillingFormData>({
@@ -52,6 +53,7 @@ export function useBillingForm() {
     name: "products"
   });
 
+  console.log(fields)
   const [selectedDates, setSelectedDates] = useState<(Date | null)[]>([null]);
 
   const handleDateChange = (index: number, date: Date | undefined) => {
@@ -98,10 +100,10 @@ export function useBillingForm() {
     }
   };
 
+  const formData = watch();
   const generatePDF = async () => {
     try {
-      const formData = watch();
-      const existingPdfBytes = await fetch('/COMPROB. RET. DAKA.pdf').then(res => res.arrayBuffer());
+      const existingPdfBytes = await fetch('/base.pdf').then(res => res.arrayBuffer());
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       const pages = pdfDoc.getPages();
       const firstPage = pages[0];
@@ -182,17 +184,20 @@ export function useBillingForm() {
       });
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
+      setBlob(blob)
+      // Downloading the PDF
+      /* const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `comprobante_retencion_${format(new Date(), "yyyy-MM-dd_HH-mm")}.pdf`;
-      link.click();
-      URL.revokeObjectURL(url);
+      link.click(); 
       toast({
         title: "PDF generado exitosamente",
         description: "El documento ha sido descargado automáticamente.",
       });
+      URL.revokeObjectURL(url) */
     } catch (error) {
+      console.error("Error generating PDF:", error);
       toast({
         variant: "destructive",
         title: "Error al generar PDF",
@@ -200,6 +205,10 @@ export function useBillingForm() {
       });
     }
   };
+
+  React.useEffect(() => {
+    generatePDF();
+  }, [JSON.stringify(watch("products"))]);
 
   return {
     register,

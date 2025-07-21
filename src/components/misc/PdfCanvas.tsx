@@ -1,18 +1,24 @@
 import { useEffect, useRef } from "react";
 
 // Asegúrate de instalar pdfjs-dist: npm install pdfjs-dist
-import { GlobalWorkerOptions, getDocument } from "pdfjs-dist";
-GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+import { getDocument, GlobalWorkerOptions } from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 
-const PdfCanvas = ({ url = "/base.pdf" }) => {
+GlobalWorkerOptions.workerSrc = pdfWorker;
+
+const PdfCanvas = ({ blob }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // const actualUrl = 'https://raw.githubusercontent.com/LetMeDream/papelito-pdf-wizard/refs/heads/main/public/base.pdf'
 
   useEffect(() => {
     const render = async () => {
-      const loadingTask = getDocument(url);
+      const arrayBuffer = blob ? await blob.arrayBuffer() : null;
+
+      const loadingTask = getDocument({ data: arrayBuffer });
       const pdf = await loadingTask.promise;
       const page = await pdf.getPage(1);
-      const scale = 1.5;
+      const scale = 10;
       const viewport = page.getViewport({ scale });
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -22,7 +28,7 @@ const PdfCanvas = ({ url = "/base.pdf" }) => {
       await page.render({ canvasContext: context, viewport }).promise;
     };
     render();
-  }, [url]);
+  }, [blob]);
 
   return (
     <div className="flex justify-center">

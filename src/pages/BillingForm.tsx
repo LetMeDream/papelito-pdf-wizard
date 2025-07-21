@@ -26,6 +26,9 @@ import { useBillingForm } from "@/hooks/useBillingForm";
 import { useState } from "react";
 
 const BillingForm = () => {
+  const [showCanvas, setShowCanvas] = useState(false);
+  const [blob, setBlob] = useState<Blob | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -44,9 +47,8 @@ const BillingForm = () => {
     onSubmit,
     generatePDF,
     methods
-  } = useBillingForm();
+  } = useBillingForm({ setBlob });
 
-  const [showCanvas, setShowCanvas] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -262,11 +264,11 @@ const BillingForm = () => {
             </div>
 
             {/* Sección inferior con canvas, visible solo si showCanvas es true */}
-            {showCanvas && (
+            {(
               <div className="flex justify-center mt-8">
                 <div style={{ maxWidth: 600, width: '100%' }}>
                   {/* <canvas id="pdf-canvas" width={600} height={800} style={{ border: '1px solid #ccc', background: '#fff', width: '100%', height: 'auto', display: 'block', margin: '0 auto' }} /> */}
-                  <PdfCanvas url="/base.pdf" />
+                  <PdfCanvas /* url="/base.pdf" */ blob={blob} />
                 </div>
               </div>
             )}
