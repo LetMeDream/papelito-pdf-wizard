@@ -148,9 +148,10 @@ const BillingForm = () => {
                         <Input
                           {...register(`products.${index}.invoiceNumber`, { 
                             onBlur: () => generatePDF(),
-                            required: "Este campo es obligatorio" 
+                            required: "Este campo es obligatorio",
                           })}
                           placeholder="Ej: FAC-001"
+                          maxLength={8}
                         />
                         {errors.products?.[index]?.invoiceNumber && (
                           <p className="text-sm text-destructive">
@@ -168,6 +169,7 @@ const BillingForm = () => {
                             required: "Este campo es obligatorio" 
                           })}
                           placeholder="Ej: CTRL-001"
+                          maxLength={10}
                         />
                         {errors.products?.[index]?.controlNumber && (
                           <p className="text-sm text-destructive">
@@ -184,6 +186,7 @@ const BillingForm = () => {
                             onBlur: () => generatePDF(),
                           })}
                           placeholder="Ej: ND-001"
+                          maxLength={12}
                         />
                       </div>
 
@@ -195,19 +198,25 @@ const BillingForm = () => {
                             onBlur: () => generatePDF(),
                           })}
                           placeholder="Ej: NC-001"
+                          maxLength={10}
                         />
                       </div>
 
                       {/* Transaction Type */}
                       <div className="space-y-2">
                         <Label>Tipo de Transacción *</Label>
-                        <Input
-                          {...register(`products.${index}.transactionType`, { 
+                        <select
+                          {...register(`products.${index}.transactionType`, {
                             required: "Este campo es obligatorio",
                             onBlur: () => generatePDF()
                           })}
-                          placeholder="Ej: Venta de productos"
-                        />
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          value={watch(`products.${index}.transactionType`) ?? ""}
+                        >
+                          <option value="" disabled>Seleccione tipo</option>
+                          <option value="01-Reg.">01-Reg.</option>
+                          <option value="02-Reg">02-Reg</option>
+                        </select>
                         {errors.products?.[index]?.transactionType && (
                           <p className="text-sm text-destructive">
                             {errors.products[index]?.transactionType?.message}

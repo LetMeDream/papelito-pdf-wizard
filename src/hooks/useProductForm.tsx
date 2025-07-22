@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { PDFDocument, rgb, degrees } from "pdf-lib";
 import { useToast } from "@/hooks/use-toast";
 import useStore from "@/store/store";
 import fontkit from '@pdf-lib/fontkit';
-
 export interface ProductData {
   date: Date | null;
   invoiceNumber: string;
@@ -35,7 +34,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
           controlNumber: "",
           debitNoteNumber: "",
           creditNoteNumber: "",
-          transactionType: "",
+          transactionType: "asdasd",
           affectedInvoiceNumber: "",
         }
       ]
@@ -49,7 +48,15 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     formState: { errors, isSubmitting },
     setValue,
     watch,
+    getValues
   } = methods;
+
+  useEffect(() => {
+    setTimeout(() => {
+      setValue(`products.0.transactionType`, '01-Reg');
+    }, 100)
+  }, [setValue])
+
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -200,6 +207,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
 
       const bInfo = businessInfo
       if (bInfo) {
+        /* Comprobante */
         if (bInfo.billNumber) {
           const blankXDeviation = -5.5
           const blankYDeviation = 10
@@ -221,6 +229,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
           });
         }
 
+        /* Emission Date */
         if (bInfo.emissionDate) {
           const blankXDeviation = -5.5
           const blankYDeviation = 20
@@ -374,6 +383,145 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             font: robotoBold
           });
         }
+      }
+
+      if(formData.products.length > 0) {
+        /* 
+          So far we will only generate the PDF with the first product.
+        */
+        const product = formData.products[0];
+        /* Date */
+        if (product.date) {
+          const blankXDeviation = -3
+          const blankYDeviation = 4.7
+          firstPage.drawRectangle({
+              x: 382 - blankXDeviation,
+              y: 84 - blankYDeviation,
+              width: 46,
+              height: 8.5,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(format(product.date, "dd-MM-yyyy", { locale: es }), {
+              x: 382,
+              y: 84,
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+        /* Billing Information; Number */
+        if (product.invoiceNumber) {
+          const blankXDeviation = -4
+          const blankYDeviation = 7.7
+          firstPage.drawRectangle({
+              x: 381 - blankXDeviation,
+              y: 135 - blankYDeviation,
+              width: 46,
+              height: 8.5,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(product.invoiceNumber, {
+              x: 382,
+              y: 135,
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+
+        /* Control Number */
+        if (product.controlNumber) {
+          const blankXDeviation = -4
+          const blankYDeviation = 4.7
+          firstPage.drawRectangle({
+              x: 381 - blankXDeviation,
+              y: 182 - blankYDeviation,
+              width: 46,
+              height: 8.5,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(product.controlNumber, {
+              x: 382,
+              y: 182,
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+
+        /* Debit Note Number */
+        if (product.debitNoteNumber) {
+          const blankXDeviation = -3
+          const blankYDeviation = 4.7
+          firstPage.drawRectangle({
+              x: 382 - blankXDeviation,
+              y: 231 - blankYDeviation,
+              width: 46,
+              height: 8.5,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(product.debitNoteNumber, {
+              x: 382,
+              y: 231,
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+
+        /* Credit Note Number */
+        if (product.creditNoteNumber) {
+          const blankXDeviation = -4
+          const blankYDeviation = 2.7
+          firstPage.drawRectangle({
+              x: 381 - blankXDeviation,
+              y: 287 - blankYDeviation,
+              width: 42,
+              height: 8.5,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(product.creditNoteNumber, {
+              x: 382,
+              y: 287,
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+
+        /* Transaction Type */
+        if (product.transactionType) {
+          const blankXDeviation = -4
+          const blankYDeviation = 0.7
+          firstPage.drawRectangle({
+              x: 381 - blankXDeviation,
+              y: 340 - blankYDeviation,
+              width: 38,
+              height: 8.5,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(product.transactionType, {
+              x: 382,
+              y: 340,
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+
+        /* console.log(product) */
       }
 
       const pdfBytes = await pdfDoc.save();
