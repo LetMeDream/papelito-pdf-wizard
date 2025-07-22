@@ -7,8 +7,9 @@ interface BusinessInfo {
   fiscalAgent: string | null;          // Registro de información fiscal del agente
   fiscalPeriod: Date | null;           // Período fiscal
   fiscalAddress: string | null;        // Dirección fiscal del agente
-  socialReasonSubjetc: string | null;  // Nombre o razón social del sujeto
-  subjectFif: string | null;           // Registro de información fiscal del sujeto
+  socialReasonSubject: string | null;  // Nombre o razón social del sujeto
+  subjectRIF: string | null;           // Registro de información fiscal del sujeto
+  billNumber?: string | null; // Número de factura (opcional)
 }
 
 type Store = {
@@ -19,9 +20,21 @@ type Store = {
 
 const useStore = create<Store>()(
   devtools((set) => ({
-    businessInfo: null,
-    setBusinessInfo: (businessInfo: BusinessInfo) => set({ businessInfo }, false, 'setBusinessInfo')
-  }), { name: 'BusinessStore' })
+    businessInfo: {
+        // Inicializar con dummy data, not null
+        emissionDate: new Date(),
+        socialReasonAgent: "GRUPO CONSOMKA, C.A." as string,
+        fiscalAgent: "j-04040404040-1",
+        fiscalPeriod: new Date(),
+        fiscalAddress: "Dirección Fiscal de Prueba",
+        socialReasonSubject: "TIENDAS DAKA,. C.A." as string,
+        subjectRIF: "V123456789",
+        billNumber: '069420420690'
+      },
+    setBusinessInfo: (businessInfo: BusinessInfo) => set(() => ({ businessInfo }))
+  }), 
+    { name: 'BusinessStore' }
+  )
 )
 
 export default useStore;

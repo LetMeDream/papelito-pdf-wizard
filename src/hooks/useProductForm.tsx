@@ -3,8 +3,10 @@ import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument, rgb, degrees } from "pdf-lib";
 import { useToast } from "@/hooks/use-toast";
+import useStore from "@/store/store";
+import fontkit from '@pdf-lib/fontkit';
 
 export interface ProductData {
   date: Date | null;
@@ -20,8 +22,9 @@ export interface BillingFormData {
   products: ProductData[];
 }
 
-export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } = {}) {
+export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } = {}) {
   const { toast } = useToast();
+  const { businessInfo } = useStore()
 
   const methods = useForm<BillingFormData>({
     defaultValues: {
@@ -53,7 +56,6 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     name: "products"
   });
 
-  console.log(fields)
   const [selectedDates, setSelectedDates] = useState<(Date | null)[]>([null]);
 
   const handleDateChange = (index: number, date: Date | undefined) => {
@@ -105,10 +107,12 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     try {
       const existingPdfBytes = await fetch('/base.pdf').then(res => res.arrayBuffer());
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      pdfDoc.registerFontkit(fontkit);
+
       const pages = pdfDoc.getPages();
       const firstPage = pages[0];
       const { height } = firstPage.getSize();
-      let yPosition = height - 150;
+      /* let yPosition = height - 150;
       formData.products.forEach((product, index) => {
         firstPage.drawText(`Producto ${index + 1}:`, {
           x: 50,
@@ -123,6 +127,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
@@ -132,6 +137,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
@@ -141,6 +147,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
@@ -150,6 +157,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
@@ -159,6 +167,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
@@ -168,6 +177,7 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
@@ -177,11 +187,195 @@ export function useBillingForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             y: yPosition,
             size: 10,
             color: rgb(0, 0, 0),
+            rotate: degrees(90)
           });
           yPosition -= 15;
         }
         yPosition -= 20;
-      });
+      }); */
+
+      // Carga la fuente personalizada
+      const fontBytes = await fetch('/fonts/Roboto-SemiBold.ttf').then(res => res.arrayBuffer());
+      const robotoBold = await pdfDoc.embedFont(fontBytes);
+
+      const bInfo = businessInfo
+      if (bInfo) {
+        if (bInfo.billNumber) {
+          const blankXDeviation = -5.5
+          const blankYDeviation = 10
+          firstPage.drawRectangle({
+              x: 162 - blankXDeviation,
+              y: 400 - blankYDeviation,
+              width: 90,
+              height: 16,
+              color: rgb(1, 1, 1),
+              rotate: degrees(90)
+            });
+          firstPage.drawText(bInfo.billNumber, {
+              x: 162,
+              y: 400,
+              size: 8,
+              color: rgb(0.4, 0.4, 0.7), 
+              font: robotoBold,
+              rotate: degrees(90) 
+          });
+        }
+
+        if (bInfo.emissionDate) {
+          const blankXDeviation = -5.5
+          const blankYDeviation = 20
+          firstPage.drawRectangle({
+            x: 162 - blankXDeviation,
+            y: 620 - blankYDeviation,
+            width: 80,
+            height: 16,
+            color: rgb(1, 1, 1),
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${format(bInfo.emissionDate, "dd-MM-yyyy", { locale: es })}`, {
+            x: 162,
+            y: 620,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7), 
+            font: robotoBold,
+            rotate: degrees(90) 
+          });
+        }
+
+        /* Social reason */
+        if (bInfo.socialReasonAgent) {
+          const blankXDeviation = -5.5
+          const blankYDeviation = 0
+          firstPage.drawRectangle({
+            x: 240 - blankXDeviation,
+            y: 130 - blankYDeviation,
+            width: 100,
+            height: 16,
+            color: rgb(1, 1, 1),
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${bInfo.socialReasonAgent}`, {
+            x: 240.5,
+            y: 130,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7), 
+            font: robotoBold,
+            rotate: degrees(90) 
+          });
+
+        }
+
+        /* Fiscal Agent */
+        if (bInfo.fiscalAgent) {
+          const blankXDeviation = -3.5
+          const blankYDeviation = 0
+
+          firstPage.drawRectangle({
+            x: 240.5 - blankXDeviation,
+            y: 376 - blankYDeviation,
+            width: 100,
+            height: 16,
+            color: rgb(1, 1, 1),
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${bInfo.fiscalAgent}`, {
+            x: 240.5,
+            y: 376,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7), 
+            font: robotoBold,
+            rotate: degrees(90) 
+          });
+        }
+
+        /* Fiscal Period */
+        if (bInfo.fiscalPeriod) {
+          const blankXDeviation = -4
+          const blankYDeviation = 8
+          firstPage.drawRectangle({
+            x: 240 - blankXDeviation,
+            y: 595 - blankYDeviation,
+            width: 100,
+            height: 16,
+            color: rgb(1, 1, 1),
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${format(bInfo.fiscalPeriod, "MMMM yyyy", { locale: es })}`, {
+            x: 240,
+            y: 595,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7),
+            rotate: degrees(90),
+            font: robotoBold
+          });
+        }
+
+        /* Address */
+        if (bInfo.fiscalAddress) {
+          const blankXDeviation = -5
+          const blankYDeviation = 100
+          firstPage.drawRectangle({
+            x: 281 - blankXDeviation,
+            y: 250 - blankYDeviation,
+            width: 300,
+            height: 16,
+            color: rgb(1, 1, 1),
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${bInfo.fiscalAddress}`, {
+            x: 281,
+            y: 250,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7),
+            rotate: degrees(90),
+            font: robotoBold
+          });
+        }
+
+        /* Subject social reason */
+        if (bInfo.socialReasonSubject) {
+          const blankXDeviation = -5
+          const blankYDeviation = 12
+          firstPage.drawRectangle({
+            x: 320.2 - blankXDeviation,
+            y: 185 - blankYDeviation,
+            width: 100,
+            height: 12,
+            color: rgb(1, 1, 1),
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${bInfo.socialReasonSubject}`, {
+            x: 320.2,
+            y: 185,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7),
+            rotate: degrees(90),
+            font: robotoBold
+          });
+        }
+
+        /* RIF */
+        if (bInfo.subjectRIF) {
+          firstPage.drawRectangle({
+            x: 320, // Coordenada X del texto a cubrir
+            y: 475, // Coordenada Y del texto a cubrir
+            width: 100, // Ancho del rectángulo
+            height: 10, // Alto del rectángulo
+            color: rgb(1, 1, 1), // Blanco
+            rotate: degrees(90)
+          });
+          firstPage.drawText(`${bInfo.subjectRIF}`, {
+            x: 320,
+            y: 475,
+            size: 8,
+            // rgb para color verde claro
+            color: rgb(0.4, 0.4, 0.7),
+            rotate: degrees(90),
+            font: robotoBold
+          });
+        }
+      }
+
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       setBlob(blob)

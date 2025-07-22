@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Form, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useBillingForm } from "@/hooks/useBillingForm";
+import { useProductForm } from "@/hooks/useProductForm";
 
 import { useState } from "react";
 
@@ -47,7 +47,7 @@ const BillingForm = () => {
     onSubmit,
     generatePDF,
     methods
-  } = useBillingForm({ setBlob });
+  } = useProductForm({ setBlob });
 
 
   return (
@@ -272,17 +272,17 @@ const BillingForm = () => {
               </Link>
             </div>
 
-            {/* Sección inferior con canvas, visible solo si showCanvas es true */}
-            {(
-              <div className="flex justify-center mt-8">
-                <div style={{ maxWidth: 600, width: '100%' }}>
-                  {/* <canvas id="pdf-canvas" width={600} height={800} style={{ border: '1px solid #ccc', background: '#fff', width: '100%', height: 'auto', display: 'block', margin: '0 auto' }} /> */}
-                  <PdfCanvas /* url="/base.pdf" */ blob={blob} />
-                </div>
-              </div>
-            )}
           </form>
         </FormProvider>
+        {/* Sección inferior con canvas, visible solo si showCanvas es true */}
+        {(
+          <div className="flex justify-center mt-8">
+            <div style={{ maxWidth: 600, width: '100%' }}>
+              {/* <canvas id="pdf-canvas" width={600} height={800} style={{ border: '1px solid #ccc', background: '#fff', width: '100%', height: 'auto', display: 'block', margin: '0 auto' }} /> */}
+              <PdfCanvas /* url="/base.pdf" */ blob={blob} />
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

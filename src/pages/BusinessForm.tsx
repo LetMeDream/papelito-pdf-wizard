@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { es } from "date-fns/locale";
 import { Calendar as CalendarIcon, ArrowLeft, Save, FileText } from "lucide-react";
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import useStore from "@/store/store";
@@ -21,7 +21,7 @@ interface BusinessFormData {
   fiscalAgent: string;
   fiscalPeriod: Date;
   fiscalAddress: string;
-  socialReasonSubjetc: string;
+  socialReasonSubject: string;
   subjectRIF: string;
 }
 
@@ -29,25 +29,26 @@ const BusinessForm = () => {
   const { toast } = useToast();
   const [emissionDate, setEmissionDate] = useState<Date>();
   const [fiscalPeriod, setFiscalPeriod] = useState<Date>();
-  const { setBusinessInfo, businessInfo } = useStore();
+  const { businessInfo, setBusinessInfo } = useStore();
+  const navigate = useNavigate();
 
   const methods = useForm<BusinessFormData>({
-    defaultValues: {
-      emissionDate: null,
-      socialReasonAgent: "",
-      fiscalAgent: "",
-      fiscalPeriod: null,
-      fiscalAddress: "",
-      socialReasonSubjetc: "",
-      subjectRIF: ""
-    }
+    // Preload values for default form state with some dummy data
+    defaultValues: businessInfo
   });
+
+  useEffect(() => {
+    // Set initial values for emissionDate and fiscalPeriod
+    setEmissionDate(methods.getValues("emissionDate"));
+    setFiscalPeriod(methods.getValues("fiscalPeriod"));
+  }, [])
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    getValues
   } = methods
 
   const onSubmit = async (data: BusinessFormData) => {
@@ -60,17 +61,7 @@ const BusinessForm = () => {
         emissionDate,
         fiscalPeriod,
       });
-
-      setBusinessInfo({
-        emissionDate,
-        socialReasonAgent: data.socialReasonAgent,
-        fiscalAgent: data.fiscalAgent,
-        fiscalPeriod,
-        fiscalAddress: data.fiscalAddress,
-        socialReasonSubjetc: data.socialReasonSubjetc,
-        subjectFif: data.subjectRIF,
-      });
-
+      setBusinessInfo(data)
       toast({
         title: "Formulario guardado exitosamente",
         description: "Los datos del negocio han sido registrados correctamente.",
@@ -83,6 +74,14 @@ const BusinessForm = () => {
       });
     }
   };
+
+  const onClickContinue = () => {
+    const values = getValues()
+    if (values) {
+      setBusinessInfo(values);
+      navigate("/product-form");
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -222,14 +221,14 @@ const BusinessForm = () => {
 
               {/* Subject Name */}
               <div className="space-y-2">
-                <Label htmlFor="socialReasonSubjetc">Nombre o Razón Social del Sujeto de Retención *</Label>
+                <Label htmlFor="socialReasonSubject">Nombre o Razón Social del Sujeto de Retención *</Label>
                 <Input
                   id="socialReasonSubjetc"
-                  {...register("socialReasonSubjetc", { required: "Este campo es obligatorio" })}
+                  {...register("socialReasonSubject", { required: "Este campo es obligatorio" })}
                   placeholder="Ej: Cliente XYZ S.A."
                 />
-                {errors.socialReasonSubjetc && (
-                  <p className="text-sm text-destructive">{errors.socialReasonSubjetc.message}</p>
+                {errors.socialReasonSubject && (
+                  <p className="text-sm text-destructive">{errors.socialReasonSubject.message}</p>
                 )}
               </div>
 
@@ -261,17 +260,12 @@ const BusinessForm = () => {
                   <Button 
                     type="button" 
                     variant="secondary" 
-                    className={cn("flex-1",
-                      businessInfo ? "" : "cursor-not-allowed opacity-50"
-                    )}
+                    className={cn("flex-1", businessInfo ? "" : "cursor-not-allowed opacity-50")}
                     disabled={!businessInfo}
+                    onClick={onClickContinue}
                   >
-                  <Link to="/billing-form" className={cn(
-                      businessInfo ? "" : "cursor-not-allowed opacity-50"
-                    )}>
-                      Continuar a Facturación
-                  </Link>
-                </Button>
+                    Continuar a Facturación
+                  </Button>
               </div>
             </form>
           </FormProvider>

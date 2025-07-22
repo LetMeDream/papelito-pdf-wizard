@@ -11,6 +11,7 @@ const PdfCanvas = ({ blob }) => {
 
   // const actualUrl = 'https://raw.githubusercontent.com/LetMeDream/papelito-pdf-wizard/refs/heads/main/public/base.pdf'
 
+  /* Render PDF into canvas */
   useEffect(() => {
     const render = async () => {
       const arrayBuffer = blob ? await blob.arrayBuffer() : null;
@@ -27,12 +28,14 @@ const PdfCanvas = ({ blob }) => {
       canvas.width = viewport.width;
       await page.render({ canvasContext: context, viewport }).promise;
     };
-    render();
+
+
+    if (blob) render();
   }, [blob]);
 
   return (
     <div className="flex justify-center">
-      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", background: "#fff", maxWidth: "100%" }} />
+      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", background: "#fff", maxWidth: "80vw" }} />
     </div>
   );
 };
