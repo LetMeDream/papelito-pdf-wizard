@@ -60,19 +60,23 @@ const BillingForm = () => {
         <header className="bg-card border-b shadow-sm">
           <div className="container mx-auto px-6 py-4">
             <div className="flex items-center space-x-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Volver
-                </Button>
-              </Link>
+
               <div>
-                <h1 className="text-2xl font-bold text-foreground flex items-center">
+                <h1 className="text-2xl font-bold text-foreground flex items-center text-center">
                   <ClipboardList className="h-6 w-6 mr-2 text-primary" />
                   Formulario de Facturación
                 </h1>
-                <p className="text-muted-foreground">Gestión de productos y detalles de facturación</p>
+                <p className="text-muted-foreground text-center">Gestión de productos y detalles de facturación</p>
               </div>
+
+              <Link to="/">
+                <Button variant="ghost" size="sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" width="24" height="24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                  </svg>
+                </Button>
+              </Link>
+
             </div>
           </div>
         </header>
@@ -83,11 +87,11 @@ const BillingForm = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               {/* Products Section */}
               <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Productos / Servicios</h2>
-                  <Button type="button" onClick={addProduct} variant="outline">
+                <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-3">
+                  <h2 className="text-xl font-semibold">Producto / Servicio</h2>
+                  <Button type="button" onClick={addProduct} variant="outline" disabled>
                     <Plus className="h-4 w-4 mr-2" />
-                    Agregar Producto
+                    Añadir
                   </Button>
                 </div>
 
@@ -96,8 +100,9 @@ const BillingForm = () => {
                     <div key={field.id} className="relative">
                       {/* Product Header */}
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-medium text-primary">
-                          Producto {index + 1}
+                        <h3 className="text-lg font-medium text-primary text-center">
+                          { (index === 0) ? 'Agregue la información del producto/servicio' : `Producto ${index + 1}`}
+                          
                         </h3>
                         {fields.length > 1 && (
                           <Button
@@ -212,7 +217,7 @@ const BillingForm = () => {
                           <select
                             {...register(`products.${index}.transactionType`, {
                               required: "Este campo es obligatorio",
-                              onChange: () => generatePDF()
+                              onBlur: () => generatePDF()
                             })}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             value={watch(`products.${index}.transactionType`) ?? ""}
@@ -245,7 +250,7 @@ const BillingForm = () => {
                           <Label>% de Recolección</Label>
                           <select
                             {...register(`products.${index}.recolectedPercentage`, {
-                              onChange: () => generatePDF(),
+                              onBlur: () => generatePDF(),
                             })}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -274,6 +279,7 @@ const BillingForm = () => {
                               setValue(`products.${index}.baseAmount`, e.target.value);
                             }}
                             onBlur={() => generatePDF()}
+                            // type="number"
                           />
                         </div>
 
@@ -333,7 +339,7 @@ const BillingForm = () => {
 
         {/* Sección inferior con canvas, visible solo si showCanvas es true */}
       </div>
-      <div className="flex justify-center border border-slate-800 mx-auto md:ml-[15vw] w-[98vw] md:w-[70vw] p-0 mb-10">
+      <div className="flex justify-center border border-slate-800 ml-[0.5vw] md:ml-[15vw] w-[99vw] md:w-[70vw] p-0 mb-10">
         <TransformWrapper limitToBounds={true} ref={transformRef}>
           {({ zoomIn, zoomOut, resetTransform }) => (
             <div className="relative">

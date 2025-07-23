@@ -2,8 +2,10 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, ClipboardList, History, Download } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
+  const {toast} = useToast();
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -15,8 +17,13 @@ const Dashboard = () => {
               <p className="text-muted-foreground">Agilización de papeleo institucional</p>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <History className="h-4 w-4 mr-2" />
+              <Button variant="outline" size="sm" 
+                onClick={() => toast({
+                  variant: "outlinedWarning",
+                  title: "Feat not available",
+                }) 
+              }>
+                <History className="h-4 w-4 mr-2"/>
                 Historial
               </Button>
             </div>
@@ -28,12 +35,8 @@ const Dashboard = () => {
       <main className="container mx-auto px-6 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <div className="bg-gradient-to-r from-primary to-primary/80 rounded-lg p-6 text-white mb-6">
-            <h2 className="text-xl font-semibold mb-2">Bienvenido al Sistema de Documentos</h2>
-            <p className="text-primary-foreground/90">
-              Crea y gestiona documentos institucionales de forma rápida y eficiente. 
-              Completa los formularios y genera PDFs automáticamente.
-            </p>
+          <div className="bg-gradient-to-r from-primary to-primary/80 rounded-lg p-6 pb-5 text-white mb-6">
+            <h2 className="text-xl text-center font-semibold mb-2">Bienvenido al Sistema</h2>
           </div>
         </div>
 
@@ -83,7 +86,7 @@ const Dashboard = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="p-4 text-center">
             <div className="text-2xl font-bold text-primary mb-1">0</div>
             <div className="text-sm text-muted-foreground">Documentos Generados</div>
@@ -96,10 +99,10 @@ const Dashboard = () => {
             <div className="text-2xl font-bold text-primary mb-1">0</div>
             <div className="text-sm text-muted-foreground">Registros Guardados</div>
           </Card>
-        </div>
+        </div> */}
 
         {/* Recent Activity */}
-        <Card className="p-6">
+        {/* <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">Actividad Reciente</h3>
           <div className="text-center py-8">
             <Download className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -107,7 +110,8 @@ const Dashboard = () => {
               No hay actividad reciente. Comienza completando un formulario.
             </p>
           </div>
-        </Card>
+        </Card> */}
+
       </main>
     </div>
   );

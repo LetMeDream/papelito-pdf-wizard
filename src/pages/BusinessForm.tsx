@@ -89,12 +89,6 @@ const BusinessForm = () => {
       <header className="bg-card border-b shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
-            <Link to="/">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Volver
-              </Button>
-            </Link>
             <div>
               <h1 className="text-2xl font-bold text-foreground flex items-center">
                 <FileText className="h-6 w-6 mr-2 text-primary" />
@@ -102,6 +96,13 @@ const BusinessForm = () => {
               </h1>
               <p className="text-muted-foreground">Información general del agente de retención</p>
             </div>
+            <Link to="/">
+              <Button variant="ghost" size="sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" width="24" height="24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
