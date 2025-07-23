@@ -17,7 +17,7 @@ export interface ProductData {
   transactionType: string;
   affectedInvoiceNumber: string;
   recolectedPercentage: "100" | "75";
-  baseAmount: string;
+  baseAmount: number;
 }
 
 export interface BillingFormData {
@@ -40,7 +40,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
           transactionType: "",
           affectedInvoiceNumber: "",
           recolectedPercentage: "75",
-          baseAmount: "253471,44"
+          baseAmount: 253471.44
         }
       ]
     }
@@ -88,7 +88,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
       transactionType: "",
       affectedInvoiceNumber: "",
       recolectedPercentage: "75",
-      baseAmount: ""
+      baseAmount: 0
     });
     setSelectedDates([...selectedDates, null]);
   };
@@ -420,8 +420,8 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
         }
 
         /* Cálculos */
-        const iva = (parseEuropeanNumber(product.baseAmount) * 0.16)
-        const finalValue = parseEuropeanNumber(product.baseAmount) + iva
+        const iva = ((product.baseAmount) * 0.16)
+        const finalValue = (product.baseAmount) + iva
         if (finalValue) {
           // Monto final (con IVA)
           firstPage.drawText(formatEuropeanNumber(finalValue), {
@@ -496,7 +496,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
           });
 
           // Total a pagar
-          const base = parseEuropeanNumber(product.baseAmount);
+          const base = (product.baseAmount);
           const dif = Number(iva - ivaRetenido)
           const totalAPagar = formatEuropeanNumber(base + dif);
           firstPage.drawText(totalAPagar, {
@@ -559,6 +559,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     removeProduct,
     onSubmit,
     generatePDF,
-    methods
+    methods,
+    getValues
   };
 }
