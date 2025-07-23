@@ -1,73 +1,48 @@
-# Welcome to your Lovable project
+# paperwork-pdf-wizard
 
-## Project info
+## Descripción
 
-**URL**: https://lovable.dev/projects/d38c2b0d-af33-4075-b698-79b5dde11a9e
+Generador de comprobantes de retención fiscal en PDF para Venezuela. Permite ingresar datos de facturas y productos, calcula montos e IVA automáticamente, y genera el documento listo para imprimir o enviar.
 
-## How can I edit this code?
+## Instalación y uso
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/d38c2b0d-af33-4075-b698-79b5dde11a9e) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Requisitos: Node.js y npm instalados.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# 1. Clona el repositorio
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Entra al directorio del proyecto
+cd paperwork-pdf-wizard
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Instala las dependencias
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Inicia el servidor de desarrollo
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Tecnologías principales
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
+- React + Vite
 - TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
+- shadcn-ui
+- pdf-lib
+- pdfjs-dist
+- react-zoom-pan-pinch
+- Cleave.js
 
-## How can I deploy this project?
+## Despliegue
 
-Simply open [Lovable](https://lovable.dev/projects/d38c2b0d-af33-4075-b698-79b5dde11a9e) and click on Share -> Publish.
+Puedes desplegar la app en cualquier servicio compatible con proyectos Vite/React, como Vercel, Netlify, o tu propio servidor.
 
-## Can I connect a custom domain to my Lovable project?
+1. Compila la app:
+   ```sh
+   npm run build
+   ```
+2. Sube el contenido de la carpeta `dist/` al hosting de tu preferencia.
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
