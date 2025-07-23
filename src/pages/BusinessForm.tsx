@@ -247,25 +247,16 @@ const BusinessForm = () => {
 
               {/* Submit Button */}
               <div className="flex space-x-4 pt-6">
-                <Button type="submit" disabled={isSubmitting} className="flex-1 ">
-                  {isSubmitting ? (
-                    "Guardando..."
-                  ) : (
-                    <>
-                      <Save className="h-4 w-4 mr-2" />
-                      Guardar Formulario
-                    </>
-                  )}
+                
+                <Button 
+                  type="button" 
+                  variant="default" 
+                  className={cn("flex-1", businessInfo ? "" : "cursor-not-allowed opacity-50")}
+                  disabled={!businessInfo}
+                  onClick={onClickContinue}
+                >
+                  Continuar a Facturación
                 </Button>
-                  <Button 
-                    type="button" 
-                    variant="secondary" 
-                    className={cn("flex-1", businessInfo ? "" : "cursor-not-allowed opacity-50")}
-                    disabled={!businessInfo}
-                    onClick={onClickContinue}
-                  >
-                    Continuar a Facturación
-                  </Button>
               </div>
             </form>
           </FormProvider>

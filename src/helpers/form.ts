@@ -66,7 +66,7 @@ export function cleanPDF(page) {
   });
   // RIF
   page.drawRectangle({
-    x: 320,
+    x: 322,
     y: 475,
     width: 100,
     height: 10,

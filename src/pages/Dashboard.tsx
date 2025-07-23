@@ -60,7 +60,7 @@ const Dashboard = () => {
             </div>
           </Card>
 
-          {/* Billing Form Card */}
+          {/* Product Form Card */}
           <Card className="p-6 hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-start space-x-4">
               <div className="bg-secondary/50 p-3 rounded-lg">
@@ -72,7 +72,7 @@ const Dashboard = () => {
                   Registra los detalles de productos, facturas, notas de débito 
                   y crédito de forma detallada.
                 </p>
-                <Link to="/billing-form">
+                <Link to="/product-form">
                   <Button variant="secondary" className="w-full">
                     Gestionar Productos
                   </Button>
