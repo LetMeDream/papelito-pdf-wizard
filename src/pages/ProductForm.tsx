@@ -332,7 +332,7 @@ const BillingForm = () => {
 
         {/* Sección inferior con canvas, visible solo si showCanvas es true */}
       </div>
-      <div className="flex justify-center border border-orange-800 ml-[0.5vw] md:ml-[15vw] w-[99vw] md:w-[70vw] p-0 mb-10">
+      <div className="flex justify-center border border-slate-800 ml-[0.5vw] md:ml-[15vw] w-[99vw] md:w-[70vw] p-0 mb-10">
         <TransformWrapper limitToBounds={true}>
           {({ zoomIn, zoomOut, resetTransform }) => (
             <div className="relative">
