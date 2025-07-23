@@ -19,7 +19,7 @@ const Dashboard = () => {
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm" 
                 onClick={() => toast({
-                  variant: "outlinedWarning",
+                  variant: "warning",
                   title: "Feat not available",
                 }) 
               }>

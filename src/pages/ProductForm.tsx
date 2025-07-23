@@ -50,7 +50,7 @@ const ProductForm = () => {
     generatePDF,
     methods,
     transformRef
-  } = useProductForm({ setBlob });
+  } = useProductForm({ setBlob, showCanvas });
 
 
   return (

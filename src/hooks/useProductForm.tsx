@@ -25,7 +25,7 @@ export interface BillingFormData {
   products: ProductData[];
 }
 
-export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } = {}) {
+export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob) => void, showCanvas?: boolean } = {}) {
   const { toast } = useToast();
   const { businessInfo } = useStore()
 
@@ -553,14 +553,12 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     setTimeout(() => {
       if (transformRef.current) {
         // setTransform(x, y, scale)
-        if (!isMobile) {
-          transformRef.current.setTransform(-700, -580, 2);
-        } else { 
+        if (isMobile) { 
           transformRef.current.setTransform(-340, -220, 2.15);
         }
       }
     }, 999);
-  }, []);
+  }, [showCanvas]);
 
   return {
     register,
