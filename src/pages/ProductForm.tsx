@@ -48,7 +48,8 @@ const BillingForm = () => {
     removeProduct,
     onSubmit,
     generatePDF,
-    methods
+    methods,
+    transformRef
   } = useProductForm({ setBlob });
 
 
@@ -332,8 +333,8 @@ const BillingForm = () => {
 
         {/* Sección inferior con canvas, visible solo si showCanvas es true */}
       </div>
-      <div className="flex justify-center border border-slate-800 ml-[0.5vw] md:ml-[15vw] w-[99vw] md:w-[70vw] p-0 mb-10">
-        <TransformWrapper limitToBounds={true}>
+      <div className="flex justify-center border border-slate-800 mx-auto md:ml-[15vw] w-[98vw] md:w-[70vw] p-0 mb-10">
+        <TransformWrapper limitToBounds={true} ref={transformRef}>
           {({ zoomIn, zoomOut, resetTransform }) => (
             <div className="relative">
               <div className="tools absolute top-2 right-2 flex space-x-4 z-10">

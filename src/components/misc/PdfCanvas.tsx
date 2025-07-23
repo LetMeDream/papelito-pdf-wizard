@@ -34,7 +34,7 @@ const PdfCanvas = ({ blob }) => {
   }, [blob]);
 
   return (
-      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", background: "#fff" }} className="max-w-[99vw] md:max-w-[70vw]" />
+      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", background: "#fff" }} className=" mx-auto max-w-[98vw] md:max-w-[70vw]" />
   );
 };
 

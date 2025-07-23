@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { format } from "date-fns";
@@ -542,6 +542,32 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     generatePDF();
   }, [/* JSON.stringify(watch("products")) */]);
 
+
+  /* Zooming in on the PDF automatically */
+  const transformRef = useRef(null);
+
+  useEffect(() => {
+    // Espera a que el componente esté montado
+    setTimeout(() => {
+      if (transformRef.current) {
+        // setTransform(x, y, scale)
+        transformRef.current.setTransform(-700, -580, 2);
+      }
+    }, 999);
+  }, []);
+
+  // Scrolling smoothly to the bottom of the page after 500ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return {
     register,
     handleSubmit,
@@ -559,6 +585,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
     removeProduct,
     onSubmit,
     generatePDF,
-    methods
+    methods,
+    transformRef
   };
 }
