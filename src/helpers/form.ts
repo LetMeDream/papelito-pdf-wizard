@@ -147,14 +147,14 @@ export function cleanPDF(page) {
     rotate: degrees(90)
   });
   // 'Compras sin derecho a Crédito I.V.A
-  page.drawRectangle({
+  /* page.drawRectangle({
     x: 385,
     y: 484,
     width: 45,
     height: 9,
     color: rgb(1, 1, 1),
     rotate: degrees(90)
-  });
+  }); */
   /* Compras internas e importaciones */
   // Base imponible
   page.drawRectangle({
@@ -197,14 +197,14 @@ export function cleanPDF(page) {
   });
 
   // Compras sin derecho a Crédito I.V.A
-  page.drawRectangle({
+  /* page.drawRectangle({
     x: 430,
     y: 484,
     width: 50,
     height: 9,
     color: rgb(1, 1, 1),
     rotate: degrees(90)
-  });
+  }); */
 
   // Base imponible
   page.drawRectangle({
@@ -226,7 +226,17 @@ export function cleanPDF(page) {
     rotate: degrees(90)
   });
 
-  // I.V.A Retenido
+  // I.V.A Retenido: title
+  page.drawRectangle({
+    x: 370,
+    y: 695,
+    width: 30,
+    height: 9,
+    color: rgb(1, 1, 1),
+    rotate: degrees(90)
+  });
+
+  // I.V.A Retenido: value 
   page.drawRectangle({
     x: 430,
     y: 690,
@@ -257,4 +267,28 @@ export function cleanPDF(page) {
   });
 
 
+}
+
+// Elimina los puntos de miles y reemplaza la coma decimal por punto
+export function parseEuropeanNumber(str: string): number {
+  return parseFloat(str.replace(/\./g, '').replace(',', '.'));
+}
+
+// Formatea un número al formato europeo: puntos para miles y coma para decimales
+export function formatEuropeanNumber(value: number | string, decimals: number = 2): string {
+  // Si el valor es string, primero lo normalizamos a número decimal
+  let num: number;
+  if (typeof value === 'string') {
+    // Elimina todos los puntos (miles) y convierte la coma decimal a punto
+    num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+  } else {
+    num = value;
+  }
+  if (isNaN(num)) return '';
+  // Fijar decimales
+  const fixed = num.toFixed(decimals);
+  const [intPartRaw, decPart] = fixed.split('.');
+  // Añadir puntos a los miles
+  const intPart = intPartRaw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return decPart ? `${intPart},${decPart}` : intPart;
 }

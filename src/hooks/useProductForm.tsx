@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, fi } from "date-fns/locale";
 import { PDFDocument, rgb, degrees } from "pdf-lib";
 import { useToast } from "@/hooks/use-toast";
 import useStore from "@/store/store";
 import fontkit from '@pdf-lib/fontkit';
-import { cleanPDF } from "@/helpers/form";
+import { cleanPDF, formatEuropeanNumber, parseEuropeanNumber } from "@/helpers/form";
 export interface ProductData {
   date: Date | null;
   invoiceNumber: string;
@@ -16,6 +16,8 @@ export interface ProductData {
   creditNoteNumber: string;
   transactionType: string;
   affectedInvoiceNumber: string;
+  recolectedPercentage: "100" | "75";
+  baseAmount: string;
 }
 
 export interface BillingFormData {
@@ -35,8 +37,10 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
           controlNumber: "",
           debitNoteNumber: "",
           creditNoteNumber: "",
-          transactionType: "asdasd",
+          transactionType: "",
           affectedInvoiceNumber: "",
+          recolectedPercentage: "75",
+          baseAmount: "253471,44"
         }
       ]
     }
@@ -55,6 +59,7 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
   useEffect(() => {
     setTimeout(() => {
       setValue(`products.0.transactionType`, '01-Reg');
+      setValue(`products.0.recolectedPercentage`, '75');
     }, 100)
   }, [setValue])
 
@@ -82,6 +87,8 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
       creditNoteNumber: "",
       transactionType: "",
       affectedInvoiceNumber: "",
+      recolectedPercentage: "75",
+      baseAmount: ""
     });
     setSelectedDates([...selectedDates, null]);
   };
@@ -119,8 +126,9 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
 
       const pages = pdfDoc.getPages();
       const firstPage = pages[0];
+      /* 
       const { height } = firstPage.getSize();
-      /* let yPosition = height - 150;
+      let yPosition = height - 150;
       formData.products.forEach((product, index) => {
         firstPage.drawText(`Producto ${index + 1}:`, {
           x: 50,
@@ -377,6 +385,133 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
             rotate: degrees(90)
           });
         }
+
+        /* Recolected Percentage */
+        if (product.recolectedPercentage) {
+          firstPage.drawText(`${product.recolectedPercentage} %`, {
+            x: 368,
+            y: 704,
+            size: 8,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+        }
+
+        /* Monto final (IMPONIBLE; NO IVA) */
+        if (product.baseAmount) {
+          firstPage.drawText(formatEuropeanNumber(product.baseAmount), {
+            x: 382.75,
+            y: 550,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+          /* Monto final, final row */
+          firstPage.drawText(formatEuropeanNumber(product.baseAmount), {
+            x: 427.75,
+            y: 550,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+        }
+
+        /* Cálculos */
+        const iva = (parseEuropeanNumber(product.baseAmount) * 0.16)
+        const finalValue = parseEuropeanNumber(product.baseAmount) + iva
+        if (finalValue) {
+          // Monto final (con IVA)
+          firstPage.drawText(formatEuropeanNumber(finalValue), {
+            x: 382.75,
+            y: 440,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+          // Monto final (con IVA) - final row
+          firstPage.drawText(formatEuropeanNumber(finalValue), {
+            x: 427.75,
+            y: 440,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+          // iva
+          firstPage.drawText(formatEuropeanNumber(iva), {
+            x: 382.75,
+            y: 646,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+          // iva - final row
+          firstPage.drawText(formatEuropeanNumber(iva), {
+            x: 427.75,
+            y: 646,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+          // Iva retenido; calculate
+          const RETENTION_RATE_FULL = 1;
+          const RETENTION_RATE_PARTIAL = 0.75;
+
+          const retentionRate = product.recolectedPercentage === "100" ? RETENTION_RATE_FULL : RETENTION_RATE_PARTIAL;
+          const ivaRetenido = iva * retentionRate;
+
+          // Iva retenido; render
+          firstPage.drawText(formatEuropeanNumber(ivaRetenido), {
+            x: 382.75,
+            y: 700,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+          // Iva retenido; final row
+          firstPage.drawText(formatEuropeanNumber(ivaRetenido), {
+            x: 427.75,
+            y: 700,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+
+          // Total retención
+          firstPage.drawText(formatEuropeanNumber(ivaRetenido), {
+            x: 460,
+            y: 700,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+
+          // Total a pagar
+          const base = parseEuropeanNumber(product.baseAmount);
+          const dif = Number(iva - ivaRetenido)
+          const totalAPagar = formatEuropeanNumber(base + dif);
+          firstPage.drawText(totalAPagar, {
+            x: 481,
+            y: 696,
+            size: 7,
+            color: rgb(0.4, 0.4, 0.7),
+            font: robotoBold,
+            rotate: degrees(90)
+          });
+
+
+        }
+
+
       }
 
       const pdfBytes = await pdfDoc.save();

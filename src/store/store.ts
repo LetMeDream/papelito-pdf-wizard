@@ -29,7 +29,7 @@ const useStore = create<Store>()(
         fiscalAddress: "Dirección Fiscal de Prueba",
         socialReasonSubject: "TIENDAS DAKA,. C.A." as string,
         subjectRIF: "V123456789",
-        billNumber: '069420420690'
+        billNumber: '069420420690',
       },
     setBusinessInfo: (businessInfo: BusinessInfo) => set(() => ({ businessInfo }))
   }), 

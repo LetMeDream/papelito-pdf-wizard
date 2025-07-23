@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { useProductForm } from "@/hooks/useProductForm";
 
 import { useState } from "react";
+import Cleave from 'cleave.js/react';
 
 const BillingForm = () => {
   const [showCanvas, setShowCanvas] = useState(false);
@@ -235,6 +236,44 @@ const BillingForm = () => {
                           placeholder="Ej: FAC-000"
                         />
                       </div>
+
+                      {/* % de recolección; (Select con dos opciones; 100% y 75%) */}
+                      <div className="space-y-2">
+                        <Label>% de Recolección</Label>
+                        <select
+                          {...register(`products.${index}.recolectedPercentage`, {
+                            onBlur: () => generatePDF(),
+                          })}
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="" disabled>Seleccione porcentaje de recolección</option>
+                          <option value="100">100%</option>
+                          <option value="75">75%</option>
+                        </select>
+                      </div>
+
+                      {/* Monto Final en $ */}
+                      <div className="space-y-2">
+                        <Label>Monto Final</Label>
+                        <Cleave
+                          options={{
+                            numeral: true,
+                            numeralThousandsGroupStyle: 'thousand',
+                            numeralDecimalMark: ',',
+                            delimiter: '.',
+                          }}
+                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                          placeholder="Ej: 1.234,56"
+                          maxLength={9}
+                          value={watch(`products.${index}.baseAmount`) ?? ''}
+                          onChange={e => {
+                            console.log(e.target.value)
+                            setValue(`products.${index}.baseAmount`, e.target.value);
+                          }}
+                          onBlur={() => generatePDF()}
+                        />
+                      </div>
+
                     </div>
 
                     {/* Separator */}
@@ -246,44 +285,46 @@ const BillingForm = () => {
               </div>
             </Card>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <Button type="submit" disabled={isSubmitting} className="flex-1">
-                {isSubmitting ? (
-                  "Guardando..."
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Guardar Productos
-                  </>
-                )}
-              </Button>
-              <Button 
-                type="button" 
-                onClick={generatePDF} 
-                variant="secondary" 
-                className="flex-1"
-              >
-                <FileDown className="h-4 w-4 mr-2" />
-                Generar PDF
-              </Button>
-              <Button
-                type="button"
-                onClick={() => setShowCanvas((prev) => !prev)}
-                variant="outline"
-                className="flex-1"
-              >
-                {showCanvas ? 'Ocultar Canvas' : 'Mostrar Canvas'}
-              </Button>
-              <Link to="/business-form" className="flex-1">
-                <Button type="button" variant="outline" className="w-full">
-                  Volver a Formulario de Negocio
-                </Button>
-              </Link>
-            </div>
 
           </form>
         </FormProvider>
+
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
+          <Button type="submit" disabled={isSubmitting} className="flex-1">
+            {isSubmitting ? (
+              "Guardando..."
+            ) : (
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                Guardar Productos
+              </>
+            )}
+          </Button>
+          <Button 
+            type="button" 
+            onClick={generatePDF} 
+            variant="secondary" 
+            className="flex-1"
+          >
+            <FileDown className="h-4 w-4 mr-2" />
+            Generar PDF
+          </Button>
+          <Button
+            type="button"
+            onClick={() => setShowCanvas((prev) => !prev)}
+            variant="outline"
+            className="flex-1"
+          >
+            {showCanvas ? 'Ocultar Canvas' : 'Mostrar Canvas'}
+          </Button>
+          <Link to="/business-form" className="flex-1">
+            <Button type="button" variant="outline" className="w-full">
+              Volver a Formulario de Negocio
+            </Button>
+          </Link>
+        </div>
         {/* Sección inferior con canvas, visible solo si showCanvas es true */}
         {(
           <div className="flex justify-center mt-8">
