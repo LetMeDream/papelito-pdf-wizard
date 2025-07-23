@@ -231,6 +231,7 @@ const BillingForm = () => {
                           {...register(`products.${index}.affectedInvoiceNumber`, {
                             onBlur: () => generatePDF(),
                           })}
+                          maxLength={10}
                           placeholder="Ej: FAC-000"
                         />
                       </div>
