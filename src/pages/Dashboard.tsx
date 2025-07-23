@@ -56,7 +56,7 @@ const Dashboard = () => {
                 </p>
                 <Link to="/business-form">
                   <Button className="w-full">
-                    Completar Formulario
+                    Ingresar información de negocio
                   </Button>
                 </Link>
               </div>
@@ -76,8 +76,8 @@ const Dashboard = () => {
                   y crédito de forma detallada.
                 </p>
                 <Link to="/product-form">
-                  <Button variant="secondary" className="w-full">
-                    Gestionar Productos
+                  <Button variant="info" className="w-full">
+                    Editar PDF
                   </Button>
                 </Link>
               </div>

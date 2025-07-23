@@ -44,6 +44,8 @@ All colors MUST be HSL.
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
+    --info: 210 40% 94%;
+    --info-foreground: 222 47% 11%;
 
     /* Form and input colors */
     --border: 214 32% 91%;

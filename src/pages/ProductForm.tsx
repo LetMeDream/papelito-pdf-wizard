@@ -316,7 +316,7 @@ const ProductForm = () => {
             <Button 
               type="button" 
               onClick={generatePDF} 
-              variant="destructive" 
+              variant="default" 
               className="flex-1"
             >
               <FileDown className="h-4 w-4 mr-2" />
@@ -374,7 +374,7 @@ const ProductForm = () => {
         <Button 
           type="button" 
           onClick={() => setShowCanvas(!showCanvas)} 
-          variant="ghost" 
+          variant="info" 
           className="flex-1"
         >
           { showCanvas ? "Ocultar PDF" : "Mostrar PDF" }
