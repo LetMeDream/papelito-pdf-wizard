@@ -45,6 +45,5 @@ You can deploy the app on any service compatible with Vite/React projects, such 
 
 ---
 
-**paperwork-pdf-wizard** is an open source project to automate the generation of tax receipts in Venezuela. If you have suggestions or improvements, feel free to open an issue or PR!
 
 
