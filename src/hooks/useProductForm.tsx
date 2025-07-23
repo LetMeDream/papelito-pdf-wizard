@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import useStore from "@/store/store";
 import fontkit from '@pdf-lib/fontkit';
 import { cleanPDF, formatEuropeanNumber, parseEuropeanNumber } from "@/helpers/form";
+import { useMediaQuery } from "./useMediaQuery";
 export interface ProductData {
   date: Date | null;
   invoiceNumber: string;
@@ -545,27 +546,20 @@ export function useProductForm({ setBlob }: { setBlob?: (blob: Blob) => void } =
 
   /* Zooming in on the PDF automatically */
   const transformRef = useRef(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   useEffect(() => {
     // Espera a que el componente esté montado
     setTimeout(() => {
       if (transformRef.current) {
         // setTransform(x, y, scale)
-        transformRef.current.setTransform(-700, -580, 2);
+        if (!isMobile) {
+          transformRef.current.setTransform(-700, -580, 2);
+        } else { 
+          transformRef.current.setTransform(-340, -220, 2.15);
+        }
       }
     }, 999);
-  }, []);
-
-  // Scrolling smoothly to the bottom of the page after 500ms
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, 500);
-
-    return () => clearTimeout(timer);
   }, []);
 
   return {
