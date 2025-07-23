@@ -34,9 +34,7 @@ const PdfCanvas = ({ blob }) => {
   }, [blob]);
 
   return (
-    <div className="flex justify-center">
-      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", background: "#fff", maxWidth: "80vw" }} />
-    </div>
+      <canvas ref={canvasRef} style={{ border: "1px solid #ccc", background: "#fff" }} className="max-w-[99vw] md:max-w-[70vw]" />
   );
 };
 
