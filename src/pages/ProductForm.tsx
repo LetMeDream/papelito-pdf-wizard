@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Form, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { formatEuropeanNumber, parseEuropeanNumber } from "@/helpers/form";
 import { useProductForm } from "@/hooks/useProductForm";
 
 import { useState } from "react";
@@ -262,7 +263,7 @@ const ProductForm = () => {
 
                         {/* Monto Final en $ */}
                         <div className="space-y-2">
-                          <Label>Monto Final</Label>
+                          <Label>Monto imponible</Label>
                           <Cleave
                             options={{
                               numeral: true,
@@ -281,6 +282,17 @@ const ProductForm = () => {
                             onBlur={() => generatePDF()}
                             // type="number"
                           />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Valor con IVA 16%</Label>
+                          <span
+                            className="w-full block rounded-md border border-input bg-muted text-muted-foreground px-3 py-2 text-sm shadow-sm cursor-not-allowed select-none"
+                            aria-disabled="true"
+                          >
+                            {watch(`products.${index}.baseAmount`) ? 
+                              formatEuropeanNumber(parseEuropeanNumber(watch(`products.${index}.baseAmount`)) * 1.16) : ''}
+                          </span>
                         </div>
 
                       </div>
