@@ -27,8 +27,8 @@ import { useState } from "react";
 import Cleave from 'cleave.js/react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-const BillingForm = () => {
-  const [showCanvas, setShowCanvas] = useState(false);
+const ProductForm = () => {
+  const [showCanvas, setShowCanvas] = useState(true);
   const [blob, setBlob] = useState<Blob | null>(null);
 
   const {
@@ -217,7 +217,7 @@ const BillingForm = () => {
                           <select
                             {...register(`products.${index}.transactionType`, {
                               required: "Este campo es obligatorio",
-                              onBlur: () => generatePDF()
+                              onChange: () => generatePDF()
                             })}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             value={watch(`products.${index}.transactionType`) ?? ""}
@@ -250,7 +250,7 @@ const BillingForm = () => {
                           <Label>% de Recolección</Label>
                           <select
                             {...register(`products.${index}.recolectedPercentage`, {
-                              onBlur: () => generatePDF(),
+                              onChange: () => generatePDF(),
                             })}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -300,34 +300,17 @@ const BillingForm = () => {
 
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
-            <Button type="submit" disabled={isSubmitting} className="flex-1">
-              {isSubmitting ? (
-                "Guardando..."
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Guardar Productos
-                </>
-              )}
-            </Button>
+          <div className="flex flex-col mx-auto max-w-[70vw] relative sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
             <Button 
               type="button" 
               onClick={generatePDF} 
-              variant="secondary" 
+              variant="destructive" 
               className="flex-1"
             >
               <FileDown className="h-4 w-4 mr-2" />
               Generar PDF
             </Button>
-            <Button
-              type="button"
-              onClick={() => setShowCanvas((prev) => !prev)}
-              variant="outline"
-              className="flex-1"
-            >
-              {showCanvas ? 'Ocultar Canvas' : 'Mostrar Canvas'}
-            </Button>
+            
             <Link to="/business-form" className="flex-1">
               <Button type="button" variant="outline" className="w-full">
                 Volver a Formulario de Negocio
@@ -339,39 +322,54 @@ const BillingForm = () => {
 
         {/* Sección inferior con canvas, visible solo si showCanvas es true */}
       </div>
-      <div className="flex justify-center border border-slate-800 ml-[0.5vw] md:ml-[15vw] w-[99vw] md:w-[70vw] p-0 mb-10">
-        <TransformWrapper limitToBounds={true} ref={transformRef}>
-          {({ zoomIn, zoomOut, resetTransform }) => (
-            <div className="relative">
-              <div className="tools absolute top-2 right-2 flex space-x-4 z-10">
-                <button
-                  className="bg-white p-2 px-4 rounded shadow hover:bg-gray-100 transition-colors"
-                  onClick={() => zoomIn()}
-                >
-                  +
-                </button>
-                <button
-                  className="bg-white p-2 px-4 rounded shadow hover:bg-gray-100 transition-colors"
-                  onClick={() => zoomOut()}
-                >
-                  -
-                </button>
-                <button
-                  className="bg-white p-2 px-4 rounded shadow hover:bg-gray-100 transition-colors"
-                  onClick={() => resetTransform()}
-                >
-                  x
-                </button>
+      {/* PDF viewer */}
+      { showCanvas && (
+        <div className="flex justify-center border border-slate-800 ml-[0.5vw] md:ml-[15vw] w-[99vw] md:w-[70vw] p-0 mb-10">
+          <TransformWrapper limitToBounds={true} ref={transformRef}>
+            {({ zoomIn, zoomOut, resetTransform }) => (
+              <div className="relative">
+                <div className="tools absolute top-2 right-2 flex space-x-4 z-10">
+                  <button
+                    className="bg-white p-2 px-4 rounded shadow hover:bg-gray-100 transition-colors"
+                    onClick={() => zoomIn()}
+                  >
+                    +
+                  </button>
+                  <button
+                    className="bg-white p-2 px-4 rounded shadow hover:bg-gray-100 transition-colors"
+                    onClick={() => zoomOut()}
+                  >
+                    -
+                  </button>
+                  <button
+                    className="bg-white p-2 px-4 rounded shadow hover:bg-gray-100 transition-colors"
+                    onClick={() => resetTransform()}
+                  >
+                    x
+                  </button>
+                </div>
+                <TransformComponent>
+                  <PdfCanvas blob={blob} />
+                </TransformComponent>
               </div>
-              <TransformComponent>
-                <PdfCanvas blob={blob} />
-              </TransformComponent>
-            </div>
-          )}
-        </TransformWrapper>
+            )}
+          </TransformWrapper>
+        </div>
+      ) }
+      {/* Action buttons */}
+      <div className="flex w-[200px] max-w-[80vw] mx-auto mb-6">
+        {/* Botón para ocultar PDF */}
+        <Button 
+          type="button" 
+          onClick={() => setShowCanvas(!showCanvas)} 
+          variant="ghost" 
+          className="flex-1"
+        >
+          { showCanvas ? "Ocultar PDF" : "Mostrar PDF" }
+        </Button>
       </div>
     </>
   );
 };
 
-export default BillingForm;
+export default ProductForm;
