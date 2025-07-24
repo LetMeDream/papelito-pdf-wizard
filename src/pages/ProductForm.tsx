@@ -335,7 +335,7 @@ const ProductForm = () => {
           <div className="flex flex-col mx-auto max-w-[70vw] relative sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
             <Button 
               type="button" 
-              onClick={() => downloadPDF(blob)} 
+              onClick={() => downloadPDF()} 
               variant="default" 
               className="flex-1"
             >

@@ -220,7 +220,7 @@ export function cleanPDF(page) {
   page.drawRectangle({
     x: 430,
     y: 642,
-    width: 46,
+    width: 44,
     height: 9,
     color: rgb(1, 1, 1),
     rotate: degrees(90)
@@ -240,7 +240,7 @@ export function cleanPDF(page) {
   page.drawRectangle({
     x: 430,
     y: 690,
-    width: 46,
+    width: 44,
     height: 9,
     color: rgb(1, 1, 1),
     rotate: degrees(90)
