@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import { formatEuropeanNumber, parseEuropeanNumber } from "@/helpers/form";
 import { useProductForm } from "@/hooks/useProductForm";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cleave from 'cleave.js/react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
@@ -52,8 +52,15 @@ const ProductForm = () => {
     methods,
     transformRef,
     downloadPDF,
-    setLastChangedField
+    setLastChangedField,
+    lastChangedField
   } = useProductForm({ setBlob, showCanvas });
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (lastChangedField) generatePDF()
+    }, 100)
+  }, [lastChangedField]);
 
 
   return (
@@ -274,7 +281,7 @@ const ProductForm = () => {
                           </select>
                         </div>
 
-                        {/* Monto Final en $ */}
+                        {/* Monto Imponible en $ */}
                         <div className="space-y-2">
                           <Label>Monto imponible</Label>
                           <Cleave
@@ -286,7 +293,7 @@ const ProductForm = () => {
                             }}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             placeholder="Ej: 1.234,56"
-                            maxLength={9}
+                            maxLength={12}
                             value={watch(`products.${index}.baseAmount`) ?? ''}
                             onChange={e => {
                               setLastChangedField(`products.${index}.baseAmount`);

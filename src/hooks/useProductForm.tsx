@@ -328,6 +328,8 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
 
         /* Recolected Percentage */
         if (product.recolectedPercentage) {
+          /* let color2 = lastChangedField === `products.0.recolectedPercentage` ? rgb(0.8, 0.2, 0.2) : color
+          debugger */
           firstPage.drawText(`${product.recolectedPercentage} %`, {
             x: 368,
             y: 704,
@@ -570,5 +572,6 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     downloadPDF,
     getValues,
     setLastChangedField,
+    lastChangedField
   };
 }
