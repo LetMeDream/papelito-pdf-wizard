@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+let base = '/paperwork-pdf-wizard/';
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -17,9 +18,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/business-form" element={<BusinessForm />} />
-          <Route path="/product-form" element={<ProductForm />} />
+          <Route path={`${base}/`} element={<Dashboard />} />
+          <Route path={`${base}/business-form`} element={<BusinessForm />} />
+          <Route path={`${base}/product-form`} element={<ProductForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
