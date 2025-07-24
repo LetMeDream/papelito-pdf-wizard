@@ -15,7 +15,7 @@ const Dashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">Sistema de Gestión de Documentos</h1>
-              <p className="text-muted-foreground">Agilización de papeleo institucional</p>
+              <p className="text-muted-foreground">Agilización de papeleo</p>
             </div>
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm" 
