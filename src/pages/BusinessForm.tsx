@@ -80,7 +80,7 @@ const BusinessForm = () => {
     const values = getValues()
     if (values) {
       setBusinessInfo(values);
-      navigate("/product-form");
+      navigate(routes.productForm);
     }
   }
 

@@ -515,7 +515,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
 
   const generatePDF = async () => {
     try {
-      let base = '/paperwork-pdf-wizard/';
+      const base = '/paperwork-pdf-wizard/';
       const existingPdfBytes = await fetch(`${base}base.pdf`).then(res => res.arrayBuffer());
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       pdfDoc.registerFontkit(fontkit);
