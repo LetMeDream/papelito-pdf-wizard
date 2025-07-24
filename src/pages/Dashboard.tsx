@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, ClipboardList, History, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { routes } from "@/helpers/routes";
 
 const Dashboard = () => {
   const {toast} = useToast();
@@ -54,7 +55,7 @@ const Dashboard = () => {
                   Captura la información general del agente de retención, 
                   datos fiscales y periodo de la transacción.
                 </p>
-                <Link to="/business-form">
+                <Link to={routes.businessForm}>
                   <Button className="w-full">
                     Ingresar información de negocio
                   </Button>
@@ -75,7 +76,7 @@ const Dashboard = () => {
                   Registra los detalles de productos, facturas, notas de débito 
                   y crédito de forma detallada.
                 </p>
-                <Link to="/product-form">
+                <Link to={routes.productForm}>
                   <Button variant="info" className="w-full">
                     Vista PDF
                   </Button>
