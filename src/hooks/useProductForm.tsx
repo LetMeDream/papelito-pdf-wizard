@@ -515,7 +515,8 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
 
   const generatePDF = async () => {
     try {
-      const existingPdfBytes = await fetch('/base.pdf').then(res => res.arrayBuffer());
+      let base = '/paperwork-pdf-wizard/';
+      const existingPdfBytes = await fetch(`${base}base.pdf`).then(res => res.arrayBuffer());
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       pdfDoc.registerFontkit(fontkit);
 
@@ -523,7 +524,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
       const firstPage = pages[0];
 
       // Loading the Roboto font
-      const fontBytes = await fetch('/fonts/Roboto-SemiBold.ttf').then(res => res.arrayBuffer());
+      const fontBytes = await fetch(`${base}fonts/Roboto-SemiBold.ttf`).then(res => res.arrayBuffer());
       const robotoBold = await pdfDoc.embedFont(fontBytes);
 
 
