@@ -27,10 +27,12 @@ import { useProductForm } from "@/hooks/useProductForm";
 import { useState, useEffect } from "react";
 import Cleave from 'cleave.js/react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const ProductForm = () => {
   const [showCanvas, setShowCanvas] = useState(true);
   const [blob, setBlob] = useState<Blob | null>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   const {
     register,
@@ -59,7 +61,7 @@ const ProductForm = () => {
   useEffect(() => {
     setTimeout(() => {
       if (lastChangedField) generatePDF()
-    }, 100)
+    }, isMobile ? 300 : 100);
   }, [lastChangedField]);
 
 
