@@ -50,7 +50,8 @@ const ProductForm = () => {
     onSubmit,
     generatePDF,
     methods,
-    transformRef
+    transformRef,
+    downloadPDF
   } = useProductForm({ setBlob, showCanvas });
 
 
@@ -315,12 +316,12 @@ const ProductForm = () => {
           <div className="flex flex-col mx-auto max-w-[70vw] relative sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-4">
             <Button 
               type="button" 
-              onClick={generatePDF} 
+              onClick={() => downloadPDF(blob)} 
               variant="default" 
               className="flex-1"
             >
               <FileDown className="h-4 w-4 mr-2" />
-              Generar PDF
+              Descargar PDF
             </Button>
             
             <Link to="/business-form" className="flex-1">

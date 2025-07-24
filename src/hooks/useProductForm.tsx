@@ -218,6 +218,8 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
 
       const bInfo = businessInfo;
       cleanPDF(firstPage);
+      
+      
       // Imprime la info después de limpiar
       if (bInfo) {
         /* Comprobante */
@@ -310,6 +312,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
         }
       }
 
+      // Imprime los campos de producto
       if(formData.products.length > 0) {
         /* 
           So far we will only generate the PDF with the first product.
@@ -327,9 +330,12 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
           });
         }
         if (product.invoiceNumber) {
+          let insertOffset = 2.20
+          if (product.invoiceNumber.toString().length >= 3) insertOffset = 3.2
+
           firstPage.drawText(product.invoiceNumber, {
             x: 382,
-            y: 135,
+            y: 164 - (product.invoiceNumber.toString().length * insertOffset),
             size: 7,
             color: rgb(0.4, 0.4, 0.7),
             font: robotoBold,
@@ -337,9 +343,12 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
           });
         }
         if (product.controlNumber) {
+          let insertOffset = 2.20
+          if (product.controlNumber.toString().length >= 3) insertOffset = 3.2
+
           firstPage.drawText(product.controlNumber, {
             x: 382,
-            y: 182,
+            y: 216 - (product.controlNumber.toString().length * insertOffset),
             size: 7,
             color: rgb(0.4, 0.4, 0.7),
             font: robotoBold,
@@ -347,9 +356,13 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
           });
         }
         if (product.debitNoteNumber) {
+          let insertOffset = 2.20
+          if (product.debitNoteNumber.toString().length >= 3) insertOffset = 3.2
+          if (product.debitNoteNumber.toString().length >= 10) insertOffset = 3.5
+
           firstPage.drawText(product.debitNoteNumber, {
             x: 382,
-            y: 231,
+            y: 274 - (product.debitNoteNumber.toString().length * insertOffset),
             size: 7,
             color: rgb(0.4, 0.4, 0.7),
             font: robotoBold,
@@ -357,9 +370,11 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
           });
         }
         if (product.creditNoteNumber) {
+          let insertOffset = 2.20
+          if (product.creditNoteNumber.toString().length >= 3) insertOffset = 2.75
           firstPage.drawText(product.creditNoteNumber, {
             x: 382,
-            y: 287,
+            y: 318 - (product.creditNoteNumber.toString().length * insertOffset),
             size: 7,
             color: rgb(0.4, 0.4, 0.7),
             font: robotoBold,
@@ -399,11 +414,20 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
           });
         }
 
-        /* Monto final (IMPONIBLE; NO IVA) */
+        /* Monto final (BASE IMPONIBLE) */
         if (product.baseAmount) {
+          let insertOffset = -22.25
+          if (product.baseAmount.toString().length >= 2) insertOffset = -10.5
+          if (product.baseAmount.toString().length >= 3) insertOffset = -5.5
+          if (product.baseAmount.toString().length >= 4) insertOffset = -2.5
+          if (product.baseAmount.toString().length >= 6) insertOffset = -1.5
+          if (product.baseAmount.toString().length >= 7) insertOffset = -0.5
+          if (product.baseAmount.toString().length >= 8) insertOffset = .25
+          
+
           firstPage.drawText(formatEuropeanNumber(product.baseAmount), {
             x: 382.75,
-            y: 550,
+            y: 550 - (product.baseAmount.toString().length * insertOffset),
             size: 7,
             color: rgb(0.4, 0.4, 0.7),
             font: robotoBold,
@@ -412,7 +436,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
           /* Monto final, final row */
           firstPage.drawText(formatEuropeanNumber(product.baseAmount), {
             x: 427.75,
-            y: 550,
+            y: 550 - (product.baseAmount.toString().length * insertOffset),
             size: 7,
             color: rgb(0.4, 0.4, 0.7),
             font: robotoBold,
@@ -424,42 +448,58 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
         const iva = (parseEuropeanNumber(product.baseAmount) * 0.16)
         const finalValue = parseEuropeanNumber(product.baseAmount) + iva
         if (finalValue) {
-          // Monto final (con IVA)
-          firstPage.drawText(formatEuropeanNumber(finalValue), {
-            x: 382.75,
-            y: 440,
-            size: 7,
-            color: rgb(0.4, 0.4, 0.7),
-            font: robotoBold,
-            rotate: degrees(90)
-          });
-          // Monto final (con IVA) - final row
-          firstPage.drawText(formatEuropeanNumber(finalValue), {
-            x: 427.75,
-            y: 440,
-            size: 7,
-            color: rgb(0.4, 0.4, 0.7),
-            font: robotoBold,
-            rotate: degrees(90)
-          });
+          // 'Total compras incluyendo el IVA'
+          {
+            let insertOffset = -1.5
+            if (formatEuropeanNumber(finalValue).length >= 4)  insertOffset = -1.5
+            if (formatEuropeanNumber(finalValue).length >= 5)  insertOffset = 1.25
+            if (formatEuropeanNumber(finalValue).length >= 7)  insertOffset = 2.25
+
+            firstPage.drawText(formatEuropeanNumber(finalValue), {
+              x: 382.75,
+              y: 460  - (formatEuropeanNumber(finalValue).length * insertOffset),
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7),
+              font: robotoBold,
+              rotate: degrees(90)
+            });
+            // 'Total compras incluyendo el IVA' - final row
+            firstPage.drawText(formatEuropeanNumber(finalValue), {
+              x: 427.75,
+              y: 460 - (formatEuropeanNumber(finalValue).length * insertOffset),
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7),
+              font: robotoBold,
+              rotate: degrees(90)
+            });
+          }
           // iva
-          firstPage.drawText(formatEuropeanNumber(iva), {
-            x: 382.75,
-            y: 646,
-            size: 7,
-            color: rgb(0.4, 0.4, 0.7),
-            font: robotoBold,
-            rotate: degrees(90)
-          });
-          // iva - final row
-          firstPage.drawText(formatEuropeanNumber(iva), {
-            x: 427.75,
-            y: 646,
-            size: 7,
-            color: rgb(0.4, 0.4, 0.7),
-            font: robotoBold,
-            rotate: degrees(90)
-          });
+          {
+            let insertOffset = 0
+            if (formatEuropeanNumber(iva).length > 3) insertOffset = -1
+            if (formatEuropeanNumber(iva).length >= 5)  insertOffset = .75
+            if (formatEuropeanNumber(iva).length >= 7) insertOffset = 1.25
+            if (formatEuropeanNumber(iva).length >= 9) insertOffset = 1.75
+
+
+            firstPage.drawText(formatEuropeanNumber(iva), {
+              x: 382.75,
+              y: 666 - (formatEuropeanNumber(iva).length * insertOffset),
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7),
+              font: robotoBold,
+              rotate: degrees(90)
+            });
+            // iva - final row
+            firstPage.drawText(formatEuropeanNumber(iva), {
+              x: 427.75,
+              y: 666 - (formatEuropeanNumber(iva).length * insertOffset),
+              size: 7,
+              color: rgb(0.4, 0.4, 0.7),
+              font: robotoBold,
+              rotate: degrees(90)
+            });
+          }
           // Iva retenido; calculate
           const RETENTION_RATE_FULL = 1;
           const RETENTION_RATE_PARTIAL = 0.75;
@@ -518,17 +558,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       setBlob(blob)
-      // Downloading the PDF
-      /* const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `comprobante_retencion_${format(new Date(), "yyyy-MM-dd_HH-mm")}.pdf`;
-      link.click(); 
-      toast({
-        title: "PDF generado exitosamente",
-        description: "El documento ha sido descargado automáticamente.",
-      });
-      URL.revokeObjectURL(url) */
+
     } catch (error) {
       console.error("Error generating PDF:", error);
       toast({
@@ -538,6 +568,29 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
       });
     }
   };
+
+  const downloadPDF = async (blob) => {
+    try {
+      // Downloading the PDF
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `comprobante_retencion_${format(new Date(), "yyyy-MM-dd_HH-mm")}.pdf`;
+      link.click(); 
+      toast({
+        title: "PDF generado exitosamente",
+        description: "El documento ha sido descargado automáticamente.",
+      });
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast({
+        variant: "destructive",
+        title: "Error al descargar PDF",
+        description: "Hubo un problema al descargar el documento.",
+      });
+    }
+  }
 
   React.useEffect(() => {
     generatePDF();
@@ -578,6 +631,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     onSubmit,
     generatePDF,
     methods,
-    transformRef
+    transformRef,
+    downloadPDF
   };
 }

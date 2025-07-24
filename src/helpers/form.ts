@@ -103,8 +103,8 @@ export function cleanPDF(page) {
   });
   // Debit Note Number
   page.drawRectangle({
-    x: 385,
-    y: 226.3,
+    x: 384.6,
+    y: 227.3,
     width: 46,
     height: 8.5,
     color: rgb(1, 1, 1),
