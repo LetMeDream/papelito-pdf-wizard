@@ -277,7 +277,6 @@ const ProductForm = () => {
                             maxLength={9}
                             value={watch(`products.${index}.baseAmount`) ?? ''}
                             onChange={e => {
-                              console.log(e.target.value)
                               setValue(`products.${index}.baseAmount`, e.target.value);
                             }}
                             onBlur={() => generatePDF()}
