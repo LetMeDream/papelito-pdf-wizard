@@ -590,6 +590,17 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     generatePDF();
   }, [/* JSON.stringify(watch("products")) */]);
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (isMobile) {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth"
+        });
+      }
+    }, 50);
+  }, [])
+
 
   /* Zooming in on the PDF automatically */
   const transformRef = useRef(null);
