@@ -33,13 +33,13 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     defaultValues: {
       products: [
         {
-          date: null,
-          invoiceNumber: "",
-          controlNumber: "",
-          debitNoteNumber: "",
-          creditNoteNumber: "",
-          transactionType: "",
-          affectedInvoiceNumber: "",
+          date: new Date('2024-12-09T00:00:00-04:00'), // Set default date to December 9, 2024
+          invoiceNumber: "00069420",
+          controlNumber: "42069000",
+          debitNoteNumber: "0",
+          creditNoteNumber: "0",
+          transactionType: "01-Reg",
+          affectedInvoiceNumber: "00069420",
           recolectedPercentage: "75",
           baseAmount: "253471,44"
         }
@@ -61,6 +61,9 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     setTimeout(() => {
       setValue(`products.0.transactionType`, '01-Reg');
       setValue(`products.0.recolectedPercentage`, '75');
+      const date = new Date('2024-12-07T00:00:00-04:00');
+      setValue(`products.0.date`, date);
+      setSelectedDates([date]); // Initialize selectedDates with the default date
     }, 100)
   }, [setValue])
 
@@ -76,7 +79,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     const newDates = [...selectedDates];
     newDates[index] = date || null;
     setSelectedDates(newDates);
-    setValue(`products.${index}.date`, date || null);
+    setValue(`products.${index}.date`, date as Date);
   };
 
   const addProduct = () => {
@@ -575,7 +578,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `comprobante_retencion_${format(new Date(), "yyyy-MM-dd_HH-mm")}.pdf`;
+      link.download = `Comprobante_retencion_${format(new Date(), "yyyy-MM-dd")}.pdf`;
       link.click(); 
       toast({
         title: "PDF generado exitosamente",
@@ -632,6 +635,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     generatePDF,
     methods,
     transformRef,
-    downloadPDF
+    downloadPDF,
+    getValues // Expose getValues
   };
 }

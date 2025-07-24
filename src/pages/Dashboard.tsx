@@ -77,7 +77,7 @@ const Dashboard = () => {
                 </p>
                 <Link to="/product-form">
                   <Button variant="info" className="w-full">
-                    Editar PDF
+                    Vista PDF
                   </Button>
                 </Link>
               </div>
