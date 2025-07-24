@@ -7,7 +7,7 @@ import { PDFDocument, rgb, degrees } from "pdf-lib";
 import { useToast } from "@/hooks/use-toast";
 import useStore from "@/store/store";
 import fontkit from '@pdf-lib/fontkit';
-import { cleanPDF, formatEuropeanNumber, parseEuropeanNumber } from "@/helpers/form";
+import { cleanPDF, formatEuropeanNumber, parseEuropeanNumber, getFixedValue } from "@/helpers/form";
 import { useMediaQuery } from "./useMediaQuery";
 export interface ProductData {
   date: Date | null;
@@ -138,9 +138,10 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
 
 
       if (bInfo) {
+        const prefix = getFixedValue()
         /* Comprobante */
         if (bInfo.billNumber) {
-          page.drawText(bInfo.billNumber, {
+          page.drawText(prefix + bInfo.billNumber, {
             x: 162,
             y: 400,
             size: 8,

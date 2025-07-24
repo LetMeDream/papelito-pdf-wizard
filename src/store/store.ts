@@ -9,7 +9,7 @@ interface BusinessInfo {
   fiscalAddress: string | null;        // Dirección fiscal del agente
   socialReasonSubject: string | null;  // Nombre o razón social del sujeto
   subjectRIF: string | null;           // Registro de información fiscal del sujeto
-  billNumber?: string | null; // Número de factura (opcional)
+  billNumber: string | null;  // Número de factura (opcional)
 }
 
 type Store = {
@@ -29,7 +29,7 @@ const useStore = create<Store>()(
         fiscalAddress: "Dirección Fiscal de Prueba",
         socialReasonSubject: "TIENDAS DAKA,. C.A." as string,
         subjectRIF: "V123456789",
-        billNumber: '069420420690',
+        billNumber: '019',
       },
     setBusinessInfo: (businessInfo: BusinessInfo) => set(() => ({ businessInfo }))
   }), 

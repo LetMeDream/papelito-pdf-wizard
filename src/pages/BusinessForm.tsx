@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import useStore from "@/store/store";
 import { routes } from "@/helpers/routes";
+import { getFixedValue } from "@/helpers/form";
 
 interface BusinessFormData {
   emissionDate: Date;
@@ -24,6 +25,7 @@ interface BusinessFormData {
   fiscalAddress: string;
   socialReasonSubject: string;
   subjectRIF: string;
+  billNumber: string;
 }
 
 const BusinessForm = () => {
@@ -54,15 +56,19 @@ const BusinessForm = () => {
 
   const onSubmit = async (data: BusinessFormData) => {
     try {
+      // Concatenar el valor fijo con el editable
+      const fixedValue = getFixedValue();
+      const fullBillNumber = `${fixedValue}${data.billNumber}`;
+      const newData = { ...data, billNumber: fullBillNumber };
       // Simulate form submission
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       console.log("Business form data:", {
-        ...data,
+        ...newData,
         emissionDate,
         fiscalPeriod,
       });
-      setBusinessInfo(data)
+      setBusinessInfo(newData)
       toast({
         title: "Formulario guardado exitosamente",
         description: "Los datos del negocio han sido registrados correctamente.",
@@ -247,6 +253,43 @@ const BusinessForm = () => {
                   <p className="text-sm text-destructive">{errors.subjectRIF.message}</p>
                 )}
               </div>
+
+              {/* bill Number - compuesto */}
+              <div className="space-y-2">
+                <Label htmlFor="billNumber">Número de Comprobante *</Label>
+                <div className="flex w-full">
+                  {/* Parte fija: año+mes */}
+                  {/** Calcula el valor fijo dinámicamente **/}
+                  {(() => {
+                    const fixedValue = getFixedValue();
+                    return (
+                      <input
+                        type="text"
+                        value={fixedValue}
+                        disabled
+                        readOnly
+                        tabIndex={-1}
+                        className="rounded-r-none border-r-0 bg-muted text-muted-foreground w-28 px-2 py-2 border border-input focus:ring-0 focus:outline-none"
+                        style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                      />
+                    );
+                  })()}
+                  {/* Parte editable */}
+                  <Input
+                    id="billNumber"
+                    {...register("billNumber", { required: "Este campo es obligatorio" })}
+                    placeholder="Secuencia o código"
+                    className="rounded-l-none border-l-0 w-full px-2 py-2 border border-input focus:ring-0 focus:outline-none"
+                    style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                    maxLength={3}
+                  />
+                </div>
+                {errors.billNumber && (
+                  <p className="text-sm text-destructive">{errors.billNumber.message}</p>
+                )}
+              </div>
+
+
 
               {/* Submit Button */}
               <div className="flex space-x-4 pt-6">

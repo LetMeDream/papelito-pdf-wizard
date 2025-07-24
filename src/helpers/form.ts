@@ -292,3 +292,11 @@ export function formatEuropeanNumber(value: number | string, decimals: number = 
   const intPart = intPartRaw.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   return decPart ? `${intPart},${decPart}` : intPart;
 }
+
+// Find the first digits for the 'N Comprobante' field. This is used to generate the 'N Comprobante' field
+export const getFixedValue = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  return `${year}${month}00000`; 
+};
