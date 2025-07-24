@@ -8,7 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, se } from "date-fns/locale";
 import { FormProvider } from "react-hook-form";
 import { 
   Calendar as CalendarIcon, 
@@ -51,7 +51,8 @@ const ProductForm = () => {
     generatePDF,
     methods,
     transformRef,
-    downloadPDF
+    downloadPDF,
+    setLastChangedField
   } = useProductForm({ setBlob, showCanvas });
 
 
@@ -158,6 +159,7 @@ const ProductForm = () => {
                           <Label>Número de Factura *</Label>
                           <Input
                             {...register(`products.${index}.invoiceNumber`, { 
+                              onChange: () => setLastChangedField(`products.${index}.invoiceNumber`),
                               onBlur: () => generatePDF(),
                               required: "Este campo es obligatorio",
                             })}
@@ -176,6 +178,7 @@ const ProductForm = () => {
                           <Label>Número de Control de Factura *</Label>
                           <Input
                             {...register(`products.${index}.controlNumber`, { 
+                              onChange: () => setLastChangedField(`products.${index}.controlNumber`),
                               onBlur: () => generatePDF(),
                               required: "Este campo es obligatorio" 
                             })}
@@ -194,6 +197,7 @@ const ProductForm = () => {
                           <Label>Número de Nota de Débito</Label>
                           <Input
                             {...register(`products.${index}.debitNoteNumber`, {
+                              onChange: () => setLastChangedField(`products.${index}.debitNoteNumber`),
                               onBlur: () => generatePDF(),
                             })}
                             placeholder="Ej: ND-001"
@@ -206,6 +210,7 @@ const ProductForm = () => {
                           <Label>Número de Nota de Crédito</Label>
                           <Input
                             {...register(`products.${index}.creditNoteNumber`, {
+                              onChange: () => setLastChangedField(`products.${index}.creditNoteNumber`),
                               onBlur: () => generatePDF(),
                             })}
                             placeholder="Ej: NC-001"
@@ -219,7 +224,10 @@ const ProductForm = () => {
                           <select
                             {...register(`products.${index}.transactionType`, {
                               required: "Este campo es obligatorio",
-                              onChange: () => generatePDF()
+                              onChange: () => {
+                                setLastChangedField(`products.${index}.transactionType`);
+                                generatePDF(); 
+                              }
                             })}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             value={watch(`products.${index}.transactionType`) ?? ""}
@@ -240,6 +248,7 @@ const ProductForm = () => {
                           <Label>Número de Factura Afectada</Label>
                           <Input
                             {...register(`products.${index}.affectedInvoiceNumber`, {
+                              onChange: () => setLastChangedField(`products.${index}.affectedInvoiceNumber`),
                               onBlur: () => generatePDF(),
                             })}
                             maxLength={10}
@@ -252,7 +261,10 @@ const ProductForm = () => {
                           <Label>% de Recolección</Label>
                           <select
                             {...register(`products.${index}.recolectedPercentage`, {
-                              onChange: () => generatePDF(),
+                              onChange: () => {
+                                setLastChangedField(`products.${index}.recolectedPercentage`);
+                                generatePDF();
+                              },
                             })}
                             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -277,6 +289,7 @@ const ProductForm = () => {
                             maxLength={9}
                             value={watch(`products.${index}.baseAmount`) ?? ''}
                             onChange={e => {
+                              setLastChangedField(`products.${index}.baseAmount`);
                               setValue(`products.${index}.baseAmount`, e.target.value);
                             }}
                             onBlur={() => generatePDF()}

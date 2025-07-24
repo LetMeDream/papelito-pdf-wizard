@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { es, fi } from "date-fns/locale";
 import { PDFDocument, rgb, degrees } from "pdf-lib";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +28,9 @@ export interface BillingFormData {
 export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob) => void, showCanvas?: boolean } = {}) {
   const { toast } = useToast();
   const { businessInfo } = useStore()
+  
+  /* In order to differentiate the last modified field */
+  const [lastChangedField, setLastChangedField] = useState<string | null>(null);
 
   const methods = useForm<BillingFormData>({
     defaultValues: {
@@ -80,6 +83,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     newDates[index] = date || null;
     setSelectedDates(newDates);
     setValue(`products.${index}.date`, date as Date);
+    setLastChangedField(`products.${index}.date`);
   };
 
   const addProduct = () => {
@@ -131,7 +135,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
       const pages = pdfDoc.getPages();
       const firstPage = pages[0];
 
-      // Carga la fuente personalizada
+      // Loading the Roboto font
       const fontBytes = await fetch('/fonts/Roboto-SemiBold.ttf').then(res => res.arrayBuffer());
       const robotoBold = await pdfDoc.embedFont(fontBytes);
 
@@ -139,7 +143,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
       const bInfo = businessInfo;
       cleanPDF(firstPage);
       
-      // Imprime la info después de limpiar
+      // Printing the business information
       if (bInfo) {
         /* Comprobante */
         if (bInfo.billNumber) {
@@ -231,8 +235,9 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
         }
       }
 
-      // Imprime los campos de producto
+      // Printing the product fields
       if(formData.products.length > 0) {
+        const color = rgb(0.4, 0.4, 0.7)
         /* 
           So far we will only generate the PDF with the first product.
         */
@@ -243,7 +248,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 84,
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.date` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -256,7 +261,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 164 - (product.invoiceNumber.toString().length * insertOffset),
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.invoiceNumber` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -269,7 +274,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 216 - (product.controlNumber.toString().length * insertOffset),
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.controlNumber` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -283,7 +288,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 274 - (product.debitNoteNumber.toString().length * insertOffset),
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.debitNoteNumber` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -295,7 +300,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 318 - (product.creditNoteNumber.toString().length * insertOffset),
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.creditNoteNumber` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -305,7 +310,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 340,
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.transactionType` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -315,7 +320,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382,
             y: 386,
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.affectedInvoiceNumber` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -327,7 +332,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 368,
             y: 704,
             size: 8,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.recolectedPercentage` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -348,7 +353,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 382.75,
             y: 550 - (product.baseAmount.toString().length * insertOffset),
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.baseAmount` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -357,7 +362,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
             x: 427.75,
             y: 550 - (product.baseAmount.toString().length * insertOffset),
             size: 7,
-            color: rgb(0.4, 0.4, 0.7),
+            color: lastChangedField === `products.0.baseAmount` ? rgb(0.8, 0.2, 0.2) : color,
             font: robotoBold,
             rotate: degrees(90)
           });
@@ -378,7 +383,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
               x: 382.75,
               y: 460  - (formatEuropeanNumber(finalValue).length * insertOffset),
               size: 7,
-              color: rgb(0.4, 0.4, 0.7),
+              color: lastChangedField === `products.0.finalValue` ? rgb(0.8, 0.2, 0.2) : color,
               font: robotoBold,
               rotate: degrees(90)
             });
@@ -387,7 +392,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
               x: 427.75,
               y: 460 - (formatEuropeanNumber(finalValue).length * insertOffset),
               size: 7,
-              color: rgb(0.4, 0.4, 0.7),
+              color: lastChangedField === `products.0.finalValue` ? rgb(0.8, 0.2, 0.2) : rgb(0.4, 0.4, 0.7),
               font: robotoBold,
               rotate: degrees(90)
             });
@@ -405,7 +410,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
               x: 382.75,
               y: 666 - (formatEuropeanNumber(iva).length * insertOffset),
               size: 7,
-              color: rgb(0.4, 0.4, 0.7),
+              color: lastChangedField === `products.0.iva` ? rgb(0.8, 0.2, 0.2) : rgb(0.4, 0.4, 0.7),
               font: robotoBold,
               rotate: degrees(90)
             });
@@ -414,7 +419,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
               x: 427.75,
               y: 666 - (formatEuropeanNumber(iva).length * insertOffset),
               size: 7,
-              color: rgb(0.4, 0.4, 0.7),
+              color: lastChangedField === `products.0.iva` ? rgb(0.8, 0.2, 0.2) : rgb(0.4, 0.4, 0.7),
               font: robotoBold,
               rotate: degrees(90)
             });
@@ -436,7 +441,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
               x: 382.75,
               y: 718 - (formatEuropeanNumber(ivaRetenido).length * insertOffset),
               size: 7,
-              color: rgb(0.4, 0.4, 0.7),
+              color: lastChangedField === `products.0.ivaRetenido` ? rgb(0.8, 0.2, 0.2) : rgb(0.4, 0.4, 0.7),
               font: robotoBold,
               rotate: degrees(90)
             });
@@ -542,6 +547,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     }, 999);
   }, [showCanvas]);
 
+
   return {
     register,
     handleSubmit,
@@ -562,6 +568,7 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
     methods,
     transformRef,
     downloadPDF,
-    getValues // Expose getValues
+    getValues,
+    setLastChangedField,
   };
 }
