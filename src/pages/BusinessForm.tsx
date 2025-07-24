@@ -14,6 +14,7 @@ import { Form, Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import useStore from "@/store/store";
+import { routes } from "@/helpers/routes";
 
 interface BusinessFormData {
   emissionDate: Date;
@@ -96,7 +97,7 @@ const BusinessForm = () => {
               </h1>
               <p className="text-muted-foreground">Información general del agente de retención</p>
             </div>
-            <Link to="/">
+            <Link to={routes.dashboard}>
               <Button variant="ghost" size="sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" width="24" height="24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />

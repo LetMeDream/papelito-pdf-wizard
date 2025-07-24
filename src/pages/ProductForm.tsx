@@ -28,6 +28,7 @@ import { useState, useEffect } from "react";
 import Cleave from 'cleave.js/react';
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { routes } from "@/helpers/routes";
 
 const ProductForm = () => {
   const [showCanvas, setShowCanvas] = useState(true);
@@ -81,7 +82,7 @@ const ProductForm = () => {
                 <p className="text-muted-foreground text-center">Gestión de productos y detalles de facturación</p>
               </div>
 
-              <Link to="/">
+              <Link to={routes.dashboard}>
                 <Button variant="ghost" size="sm">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" width="24" height="24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -344,8 +345,8 @@ const ProductForm = () => {
               <FileDown className="h-4 w-4 mr-2" />
               Descargar PDF
             </Button>
-            
-            <Link to="/business-form" className="flex-1">
+
+            <Link to={routes.businessForm} className="flex-1">
               <Button type="button" variant="outline" className="w-full">
                 Volver a Formulario de Negocio
               </Button>

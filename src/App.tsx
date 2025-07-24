@@ -7,10 +7,10 @@ import Dashboard from "./pages/Dashboard";
 import BusinessForm from "./pages/BusinessForm";
 import ProductForm from "./pages/ProductForm";
 import NotFound from "./pages/NotFound";
+import { routes } from "./helpers/routes";
 
 const queryClient = new QueryClient();
 
-let base = '/paperwork-pdf-wizard/';
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -18,9 +18,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path={`${base}/`} element={<Dashboard />} />
-          <Route path={`${base}/business-form`} element={<BusinessForm />} />
-          <Route path={`${base}/product-form`} element={<ProductForm />} />
+          <Route path={routes.dashboard} element={<Dashboard />} />
+          <Route path={routes.businessForm} element={<BusinessForm />} />
+          <Route path={routes.productForm} element={<ProductForm />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
