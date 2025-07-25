@@ -135,8 +135,6 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
 
       if (color) mainColor = color;
       
-
-
       if (bInfo) {
         const prefix = getFixedValue()
         /* Comprobante */
@@ -196,9 +194,16 @@ export function useProductForm({ setBlob, showCanvas }: { setBlob?: (blob: Blob)
         }
         /* Address */
         if (bInfo.fiscalAddress) {
+          const product = formData.products[0];
+          let insertOffset = 2.20
+          if (bInfo.fiscalAddress.toString().length >= 3) insertOffset = 2.25
+
+          let finalColor = lastChangedField === `products.0.creditNoteNumber` ? rgb(0.8, 0.2, 0.2) : mainColor;
+          if (color) finalColor = color;
+
           page.drawText(`${bInfo.fiscalAddress}`, {
             x: 281,
-            y: 250,
+            y: 330 - (bInfo.fiscalAddress.toString().length * insertOffset),
             size: 8,
             color: color ? color : rgb(0.4, 0.4, 0.7),
             rotate: degrees(90),

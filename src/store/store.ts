@@ -24,9 +24,9 @@ const useStore = create<Store>()(
         // Inicializar con dummy data, not null
         emissionDate: new Date(),
         socialReasonAgent: "GRUPO CONSOMKA, C.A." as string,
-        fiscalAgent: "j-04040404040-1",
+        fiscalAgent: "J-40444808-0",
         fiscalPeriod: new Date(),
-        fiscalAddress: "Dirección Fiscal de Prueba",
+        fiscalAddress: "AV. CRUZ PERAZA CASA S/N SECTOR SAN MIGUEL, MATURIN EDO. MONAGAS",
         socialReasonSubject: "TIENDAS DAKA,. C.A." as string,
         subjectRIF: "V123456789",
         billNumber: '019',

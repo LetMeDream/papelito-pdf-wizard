@@ -59,11 +59,11 @@ const ProductForm = () => {
     lastChangedField
   } = useProductForm({ setBlob, showCanvas });
 
-  useEffect(() => {
+  /* useEffect(() => {
     setTimeout(() => {
       if (lastChangedField) generatePDF()
     }, isMobile ? 300 : 100);
-  }, [lastChangedField]);
+  }, [lastChangedField]); */
 
 
   return (
@@ -220,7 +220,7 @@ const ProductForm = () => {
                           <Label>Número de Nota de Crédito</Label>
                           <Input
                             {...register(`products.${index}.creditNoteNumber`, {
-                              onChange: () => setLastChangedField(`products.${index}.creditNoteNumber`),
+                              onChange: () => {setLastChangedField(`products.${index}.creditNoteNumber`)},
                               onBlur: () => generatePDF(),
                             })}
                             placeholder="Ej: NC-001"
@@ -345,7 +345,7 @@ const ProductForm = () => {
               <FileDown className="h-4 w-4 mr-2" />
               Descargar PDF
             </Button>
-
+            
             <Link to={routes.businessForm} className="flex-1">
               <Button type="button" variant="outline" className="w-full">
                 Volver a Formulario de Negocio
